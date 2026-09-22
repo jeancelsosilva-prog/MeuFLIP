@@ -1,0 +1,25 @@
+{
+  "name": "MeuFLIP",
+  "short_name": "MeuFLIP",
+  "description": "Manual e calculadora de flip de console: teto de compra, giro de capital e registro de negócios.",
+  "lang": "pt-BR",
+  "dir": "ltr",
+  "start_url": "./index.html",
+  "scope": "./",
+  "id": "./",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait",
+  "background_color": "#101F38",
+  "theme_color": "#101F38",
+  "categories": ["business", "finance", "productivity"],
+  "icons": [
+    { "src": "./icon-192.png?v=3", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-512.png?v=3", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icon-maskable-512.png?v=3", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Régua de compra", "short_name": "Régua", "url": "./index.html#regua" },
+    { "name": "Novo negócio", "short_name": "Negócios", "url": "./index.html#negocios" }
+  ]
+}

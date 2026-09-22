@@ -1,0 +1,2871 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>MeuFLIP</title>
+<meta name="description" content="Manual e calculadora de flip de console: teto de compra, giro de capital e registro de negócios.">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MeuFLIP">
+<meta name="application-name" content="MeuFLIP">
+<meta name="theme-color" content="#101F38">
+<meta name="color-scheme" content="light dark">
+<meta name="format-detection" content="telephone=no">
+
+<link rel="manifest" href="./manifest.webmanifest?v=3">
+<link rel="apple-touch-icon" href="./icon-180.png?v=3">
+<link rel="apple-touch-icon" sizes="152x152" href="./icon-152.png?v=3">
+<link rel="apple-touch-icon" sizes="167x167" href="./icon-167.png?v=3">
+<link rel="apple-touch-icon" sizes="180x180" href="./icon-180.png?v=3">
+<link rel="icon" type="image/png" sizes="16x16" href="./icon-16.png?v=3">
+<link rel="icon" type="image/png" sizes="32x32" href="./icon-32.png?v=3">
+<link rel="icon" type="image/png" sizes="48x48" href="./icon-48.png?v=3">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png?v=3">
+
+<style>
+/* ============ tokens ============ */
+:root{
+  --chrome:#101F38;
+  --chrome-2:#1A2E4D;
+  --chrome-ink:#E9EEF7;
+  --chrome-muted:#8098BC;
+
+  --bg:#EFF1F6;
+  --card:#FFFFFF;
+  --card-2:#F4F6FA;
+  --ink:#141922;
+  --ink-2:#3A4454;
+  --muted:#626E82;
+  --line:#DBE0EA;
+  --line-2:#E8ECF3;
+
+  --go:#1863B8;
+  --go-bg:#DCE8F8;
+  --on-go:#FFFFFF;
+  --on-warn:#FFFFFF;
+  --warn:#8C5D09;
+  --warn-bg:#F7EBD6;
+  --stop:#A63A2D;
+  --stop-bg:#F8E3DF;
+
+  --r:14px;
+  --r-sm:10px;
+  --tap:46px;
+  --sh:0 1px 2px rgba(16,28,56,.06), 0 10px 26px -18px rgba(16,28,56,.38);
+
+  --sat:env(safe-area-inset-top, 0px);
+  --sab:env(safe-area-inset-bottom, 0px);
+  --bar-h:58px;
+  --tabs-h:56px;
+
+  --ui:-apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --serif:ui-serif, "New York", Georgia, "Times New Roman", serif;
+  --mono:ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D131E;
+    --card:#151C29;
+    --card-2:#1C2432;
+    --ink:#E7ECF4;
+    --ink-2:#B7C2D3;
+    --muted:#8593A8;
+    --line:#273140;
+    --line-2:#202838;
+    --go:#5BA8F2;
+    --go-bg:#10253E;
+    --on-go:#0B1220; --on-warn:#2A1E06;
+    --on-warn:#2A1E06;
+    --warn:#D6A040;
+    --warn-bg:#33270F;
+    --stop:#DE7765;
+    --stop-bg:#371C17;
+    --sh:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -18px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D131E; --card:#151C29; --card-2:#1C2432;
+  --ink:#E7ECF4; --ink-2:#B7C2D3; --muted:#8593A8;
+  --line:#273140; --line-2:#202838;
+  --go:#5BA8F2; --go-bg:#10253E; --on-go:#0B1220; --warn:#D6A040; --warn-bg:#33270F;
+  --stop:#DE7765; --stop-bg:#371C17;
+  --sh:0 1px 2px rgba(0,0,0,.45), 0 10px 26px -18px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+html{background:var(--chrome)}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:var(--ui); font-size:16px; line-height:1.5;
+  -webkit-font-smoothing:antialiased; overscroll-behavior-y:none;
+  padding-top:calc(var(--sat) + var(--bar-h));
+  padding-bottom:calc(var(--sab) + var(--tabs-h));
+  min-height:100vh;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+h1,h2,h3,h4{margin:0;letter-spacing:-.02em;line-height:1.2}
+p{margin:0 0 .85em}
+[hidden]{display:none!important}
+:focus-visible{outline:2px solid var(--go);outline-offset:2px;border-radius:6px}
+
+/* ============ chrome ============ */
+.appbar{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:var(--chrome); color:var(--chrome-ink);
+  padding:0 16px; padding-top:var(--sat);
+  height:calc(var(--sat) + var(--bar-h));
+  display:flex;align-items:center;gap:12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.appbar .mark{width:29px;height:29px;flex:0 0 auto}
+.appbar .ttl{font-size:16.5px;font-weight:650;letter-spacing:-.02em}
+.appbar .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--chrome-muted);margin-top:1px}
+.appbar .spacer{flex:1}
+.iconbtn{
+  width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
+  color:var(--chrome-muted);
+}
+.iconbtn:active{background:rgba(255,255,255,.08)}
+.iconbtn svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.tabs{
+  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  background:var(--chrome); border-top:1px solid rgba(255,255,255,.07);
+  padding-bottom:var(--sab);
+  display:grid;grid-template-columns:repeat(5,1fr);
+}
+.tabs button{
+  height:var(--tabs-h);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;color:var(--chrome-muted);
+  font-size:10px;letter-spacing:.02em;font-weight:500;
+}
+.tabs button svg{width:21px;height:21px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+.tabs button[aria-selected="true"]{color:#6FB6F7}
+.tabs button:active{opacity:.6}
+
+/* ============ layout ============ */
+main{padding:14px 16px 26px;max-width:720px;margin-inline:auto}
+.view{animation:in .18s ease both}
+@keyframes in{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}
+
+/* ==================================================================
+   DESKTOP — barra lateral, colunas, diálogo centralizado, teclado
+   ================================================================== */
+.side-brand{display:none}
+.tabs kbd{display:none}
+kbd{font-family:var(--mono);font-size:10.5px;border:1px solid rgba(255,255,255,.22);
+  border-bottom-width:2px;border-radius:5px;padding:1px 5px;color:var(--chrome-muted);
+  margin-left:auto;line-height:1.5}
+
+/* ============================================================
+   Ajustes de ponteiro, foco e leitura
+   ============================================================ */
+
+/* Anel de foco unico pro app inteiro. So aparece em navegacao por
+   teclado (:focus-visible), nunca no clique do mouse. */
+:focus-visible{outline:2px solid var(--go);outline-offset:2px;border-radius:8px}
+.tabs button:focus-visible{outline-color:#6FB6F7;outline-offset:-2px}
+.sheet .body :focus-visible{outline-offset:1px}
+
+/* Texto que muda conforme o aparelho. O padrao e o do toque; so vira
+   "clique" quando existe mouse de verdade. */
+.p-fino{display:none}
+/* dica de atalho: so faz sentido onde existe teclado */
+.empty .dica{display:none;margin-top:10px;font-size:12.5px;opacity:.85}
+@media (hover:hover) and (pointer:fine){
+  .p-toque{display:none}
+  .p-fino{display:inline}
+  .empty .dica{display:block}
+}
+/* Tablet grande e touch: largura passa de 920px mas nao ha mouse.
+   Sem isso o hover "gruda" depois do toque. */
+@media (hover:none){
+  .deal:hover,.alert:hover,.quick button:hover,.acc > summary:hover,
+  .chips button:hover,.seg button:hover,.stepper button:hover,
+  .filters button:hover,.btn:hover{
+    background:inherit;border-color:var(--line);filter:none;color:inherit;
+  }
+  .tabs button:hover{background:transparent}
+}
+
+/* Estado vazio ocupa a largura toda da grade e fica no centro. */
+.empty{grid-column:1 / -1}
+.empty kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line);
+  border-radius:5px;padding:1px 5px;background:var(--card-2);color:var(--ink-2)}
+
+/* Carrossel de insignias: para no card certo e avisa que rola. */
+.bdg-row{scroll-snap-type:x mandatory;scroll-padding-left:16px}
+.bdg-row .bdg{scroll-snap-align:start}
+
+/* ---- barra fixa do teto (so no celular) ----
+   Some no desktop, onde o card da direita ja fica grudado. */
+.teto-fixo{
+  position:fixed;left:0;right:0;top:calc(var(--bar-h) + var(--sat));
+  z-index:60;display:flex;align-items:center;gap:10px;
+  padding:9px 16px;background:var(--card);border-bottom:1px solid var(--line);
+  box-shadow:0 6px 18px -12px rgba(16,28,56,.5);
+  transform:translateY(-104%);opacity:0;pointer-events:none;
+  transition:transform .18s ease, opacity .18s ease;
+}
+.teto-fixo.on{transform:none;opacity:1}
+.tf-cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--muted)}
+.tf-v{font-size:19px;font-weight:600;letter-spacing:-.03em;color:var(--go);
+  font-variant-numeric:tabular-nums}
+.tf-pill{margin-left:auto;font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:.05em;padding:4px 9px;border-radius:999px;white-space:nowrap;
+  background:var(--go-bg);color:var(--go)}
+.tf-pill.warn{background:var(--warn-bg);color:var(--warn)}
+.tf-pill.stop{background:var(--stop-bg);color:var(--stop)}
+.teto-fixo.stop .tf-v{color:var(--stop)}
+.teto-fixo.warn .tf-v{color:var(--warn)}
+@media (prefers-reduced-motion:reduce){.teto-fixo{transition:none}}
+@media (min-width:920px){.teto-fixo{display:none}}
+
+@media (min-width:920px){
+  body{padding-top:var(--bar-h);padding-bottom:0;padding-left:236px}
+
+  .appbar{left:236px;padding:0 30px;height:var(--bar-h)}
+  .appbar .mark{display:none}
+  .appbar .ttl{font-size:17px}
+
+  .tabs{
+    top:0;bottom:0;right:auto;width:236px;height:100vh;
+    display:flex;flex-direction:column;gap:2px;
+    padding:20px 12px 18px;border-top:0;border-right:1px solid rgba(255,255,255,.07);
+  }
+  .tabs kbd{display:inline-block}
+  .side-brand{
+    display:flex;align-items:center;gap:10px;padding:4px 10px 20px;color:var(--chrome-ink);
+    font-size:16px;font-weight:700;letter-spacing:-.02em;
+  }
+  .side-brand svg{width:26px;height:26px;flex:0 0 auto}
+  .tabs button{
+    height:44px;flex-direction:row;justify-content:flex-start;gap:12px;
+    padding:0 12px;border-radius:9px;font-size:14.5px;font-weight:550;letter-spacing:-.01em;
+  }
+  .tabs button svg{width:19px;height:19px}
+  .tabs button:hover{background:rgba(255,255,255,.06);color:#D2E2F7}
+  .tabs button[aria-selected="true"]{background:rgba(111,182,247,.15)}
+  .tabs button:active{opacity:1;transform:scale(.99)}
+
+  main{max-width:1120px;padding:26px 34px 56px}
+  .fab{right:34px;bottom:30px}
+  .toast{left:auto;right:34px;transform:none;bottom:30px}
+  .toast.on{transform:translateY(-4px)}
+
+  .greet{padding:0 2px 20px}
+  .greet h2{font-size:34px}
+  .greet p{font-size:15.5px}
+  .quick{grid-template-columns:repeat(2,1fr);max-width:560px;margin-top:4px}
+  .chips.scroll{flex-wrap:wrap;overflow:visible}
+  .chips.scroll button{flex:0 0 auto}
+  .bdg-row{margin-inline:0;padding-inline:0}
+  .bdg-row .bdg{flex:0 0 205px}
+  #k-saude{grid-template-columns:repeat(3,1fr)}
+
+  #v-regua{display:grid;grid-template-columns:minmax(0,1fr) 352px;gap:24px;align-items:start}
+  #v-regua > *{grid-column:1;min-width:0}
+  #v-regua > .hero{grid-column:2;grid-row:1 / span 8;position:sticky;
+    top:calc(var(--bar-h) + 26px);margin-bottom:0;padding:24px 20px}
+  #v-regua > .hero .big{font-size:46px}
+  #v-regua .fields{grid-template-columns:repeat(2,1fr)}
+
+  /* Campo de 4 digitos nao precisa de 650px. Os controles ganham uma
+     largura de leitura e param de atravessar a coluna inteira. */
+  #v-regua .stepper{max-width:280px}
+  #v-regua .seg{max-width:460px}
+  #v-regua input[type=range]{max-width:460px;display:block}
+  #v-regua .ctl > .hint{max-width:56ch}
+
+  /* Rotulo e valor a 1130px de distancia ninguem associa. */
+  .xp-fonte li{max-width:620px}
+  .xp-fonte h4,.xp-fonte p{max-width:620px}
+
+  /* Cards de insignia com a mesma altura na linha. */
+  .bdg-grid{align-items:stretch}
+  .bdg-grid > .bdg{height:100%}
+
+  .empty{padding:64px 20px}
+
+  #deals{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start;padding-bottom:0}
+  .deal{margin-bottom:0}
+  .deal:hover{border-color:color-mix(in srgb, var(--go) 35%, var(--line))}
+  .filters button{cursor:pointer}
+  .filters button:hover{border-color:var(--go);color:var(--ink)}
+
+  #bdg-grupos{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;align-items:start}
+  .bdg-group .sec{margin-top:20px}
+  .bdg-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .conq-hero{padding:24px}
+  .conq-n{font-size:42px}
+
+  #v-manual{max-width:820px}
+  .acc > summary{padding:16px 20px}
+  .acc > summary:hover{background:var(--card-2)}
+  .acc .inner{padding:16px 20px 20px}
+
+  .sheet{align-items:center}
+  .sheet .body{
+    max-width:620px;border-radius:16px;max-height:86vh;
+    padding:22px 26px 26px;box-shadow:0 24px 70px -20px rgba(0,0,0,.55);
+    border:1px solid var(--line);
+  }
+  .sheet .grab{display:none}
+  .btn{cursor:pointer}
+  .btn:hover{filter:brightness(1.06)}
+  .chips button:hover,.seg button:hover{border-color:var(--go)}
+  .stepper button:hover{border-color:var(--go);color:var(--go)}
+  .alert{cursor:pointer}
+  .alert:hover{border-color:color-mix(in srgb, var(--go) 35%, var(--line))}
+  .quick button:hover{border-color:var(--go)}
+}
+
+@media (min-width:1280px){
+  main{max-width:1240px}
+  #bdg-grupos{grid-template-columns:repeat(3,1fr);gap:0 24px}
+  /* Aqui havia uma grade de duas colunas com uma faixa de 330px a direita.
+     Ela so cabia o card de nivel e deixava 600px de vazio embaixo; tentar
+     grudar o card ou estica-lo em varias linhas so trocou um defeito por
+     outro (a grade e implicita, entao "/ -1" volta pra linha 1 e "span 50"
+     inventa 49 gaps). Coluna unica e mais honesta: o conteudo largo
+     (negocios, insignias, KPIs) ja usa a largura, e o resto vira margem. */
+  #v-inicio > .lvl{max-width:520px}
+  .quick{max-width:760px}
+  .xp-fonte li{max-width:620px}
+  #deals{grid-template-columns:repeat(3,1fr)}
+}
+
+@media (prefers-reduced-motion:reduce){.view{animation:none}*{transition:none!important}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+.card.flat{box-shadow:none}
+.sec{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);margin:22px 0 10px;padding-inline:2px}
+.sec:first-child{margin-top:4px}
+
+/* ============ hero result ============ */
+.hero{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:18px;margin-bottom:14px;text-align:center;
+}
+.hero .cap{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--muted)}
+.hero .big{font-family:var(--mono);font-size:clamp(38px,12vw,52px);font-weight:600;
+  letter-spacing:-.045em;line-height:1.02;margin:6px 0 2px;color:var(--go)}
+.hero .big.neg{color:var(--stop)}
+.hero .sub{font-size:13.5px;color:var(--muted)}
+
+.pill{
+  display:inline-flex;align-items:center;gap:7px;border-radius:999px;
+  padding:8px 15px;font-size:14px;font-weight:650;letter-spacing:-.01em;margin-top:12px;
+}
+.p-go{background:var(--go-bg);color:var(--go)}
+.p-warn{background:var(--warn-bg);color:var(--warn)}
+.p-stop{background:var(--stop-bg);color:var(--stop)}
+.pill .dot{width:7px;height:7px;border-radius:99px;background:currentColor;flex:0 0 auto}
+.verdict-note{font-size:13.5px;color:var(--ink-2);margin-top:10px;line-height:1.45}
+
+/* ============ controles ============ */
+.ctl{margin-bottom:16px}
+.ctl:last-child{margin-bottom:0}
+.ctl > .lab{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.ctl .lab .t{font-size:13px;font-weight:600;color:var(--ink-2);letter-spacing:-.01em}
+.ctl .lab .v{font-family:var(--mono);font-size:17px;font-weight:600;letter-spacing:-.02em}
+.ctl .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+
+.stepper{display:grid;grid-template-columns:var(--tap) 1fr var(--tap);gap:6px;align-items:stretch}
+.stepper button{
+  background:var(--card-2);border:1px solid var(--line);border-radius:var(--r-sm);
+  font-size:21px;font-weight:400;color:var(--ink-2);display:grid;place-items:center;
+  min-height:var(--tap);
+}
+.stepper button:active{background:var(--go-bg);color:var(--go);border-color:var(--go)}
+.stepper input{
+  width:100%;min-height:var(--tap);background:var(--card-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:0 12px;text-align:center;
+  font-family:var(--mono);font-size:18px;font-weight:600;letter-spacing:-.02em;
+  -moz-appearance:textfield;
+}
+.stepper input::-webkit-outer-spin-button,
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stepper input:focus{outline:none;border-color:var(--go);box-shadow:0 0 0 3px var(--go-bg)}
+
+input[type=range]{
+  -webkit-appearance:none;appearance:none;width:100%;height:40px;background:transparent;margin:0;
+  touch-action:pan-y;
+}
+input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--line);border-radius:99px}
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:26px;height:26px;border-radius:50%;background:var(--card);
+  border:2px solid var(--go);box-shadow:0 1px 4px rgba(0,0,0,.2);margin-top:-11px;
+  transition:transform .12s ease;
+}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.14)}
+input[type=range]::-moz-range-track{height:4px;background:var(--line);border-radius:99px}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;
+  background:var(--card);border:2px solid var(--go)}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips button{
+  border:1px solid var(--line);background:var(--card-2);border-radius:999px;
+  padding:9px 14px;font-size:13.5px;font-weight:550;color:var(--ink-2);min-height:40px;
+}
+.chips button[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:var(--on-go)}
+.chips button:active{transform:scale(.97)}
+.chips.scroll{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;
+  margin-inline:-16px;padding-inline:16px;padding-bottom:2px}
+.chips.scroll::-webkit-scrollbar{display:none}
+.chips.scroll button{flex:0 0 auto;font-size:13px;padding:8px 13px;min-height:38px}
+/* A lista cresceu e deslizar na horizontal escondia console: a barra fica
+   oculta e no mouse nao rola. Quebra em linhas e mostra tudo. Esta regra
+   PRECISA vir depois das de cima - media query nao soma especificidade. */
+.chips.scroll{flex-wrap:wrap;overflow:visible;margin-inline:0;padding-inline:0}
+/* A Regua lista 16 consoles. Compacta so essa tira pra caber em 3 linhas
+   em tela de celular, sem perder area de toque (36px de altura). */
+/* 16 consoles numa tira unica ficava ilegivel. Agrupa por familia:
+   rotulo curto na esquerda, so a variacao no chip. */
+#presets{display:grid;grid-template-columns:auto 1fr;gap:7px 9px;align-items:center}
+#presets .fam{font-family:var(--mono);font-size:9.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted);text-align:right;white-space:nowrap}
+#presets .row{display:flex;flex-wrap:wrap;gap:6px}
+#presets button{font-size:12.5px;padding:7px 11px;min-height:38px;font-weight:600;
+  letter-spacing:-.012em;line-height:1.15}
+
+.seg{display:grid;gap:4px;background:var(--card-2);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:4px}
+.seg button{border-radius:8px;padding:10px 4px;font-size:14px;font-weight:600;
+  color:var(--muted);font-family:var(--mono);min-height:42px}
+.seg button[aria-pressed="true"]{background:var(--card);color:var(--go);box-shadow:var(--sh)}
+
+/* ============ régua ============ */
+.ruler{margin-top:6px}
+.ruler .track{position:relative;height:38px;background:var(--card-2);
+  border:1px solid var(--line);border-radius:var(--r-sm);overflow:hidden}
+.ruler .z{position:absolute;top:0;bottom:0}
+.z-go{background:var(--go-bg);left:0}
+.z-warn{background:var(--warn-bg)}
+.z-stop{background:var(--stop-bg)}
+.ruler .pin{position:absolute;top:0;bottom:0;width:3px;border-radius:2px}
+.pin-teto{background:var(--go)}
+.pin-ask{background:var(--stop);width:2px}
+.ruler .legend{display:flex;justify-content:space-between;margin-top:8px;
+  font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ruler .legend b{display:block;color:var(--ink);font-size:13.5px;font-weight:600}
+.ruler .legend > div:last-child{text-align:right}
+
+/* ============ grids de saída ============ */
+.kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.kpis.three{grid-template-columns:repeat(3,1fr)}
+.kpis > div{background:var(--card);padding:13px 14px;min-height:74px}
+.kpis .v{font-family:var(--mono);font-size:20px;font-weight:600;letter-spacing:-.03em;
+  display:block;line-height:1.15}
+.kpis .k{font-size:11px;color:var(--muted);margin-top:4px;display:block;line-height:1.3}
+.kpis .v.go{color:var(--go)} .kpis .v.stop{color:var(--stop)} .kpis .v.warn{color:var(--warn)}
+.kpis > div.wide{grid-column:1/-1}
+.kpis > div.feat{background:var(--go-bg)}
+.kpis > div.feat .v{color:var(--go);font-size:26px}
+
+/* ============ botões ============ */
+.btn{
+  display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  min-height:50px;border-radius:var(--r-sm);font-size:16px;font-weight:650;
+  letter-spacing:-.01em;padding:0 16px;
+}
+.btn-p{background:var(--go);color:var(--on-go)}
+.btn-s{background:var(--card-2);color:var(--ink-2);border:1px solid var(--line)}
+.btn-d{background:transparent;color:var(--stop);border:1px solid var(--stop)}
+.btn:active{opacity:.82;transform:scale(.99)}
+.btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round}
+.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+.fab{
+  position:fixed;right:16px;bottom:calc(var(--sab) + var(--tabs-h) + 16px);z-index:45;
+  width:56px;height:56px;border-radius:19px;background:var(--go);color:var(--on-go);
+  display:grid;place-items:center;box-shadow:0 6px 20px -6px rgba(24,99,184,.6);
+}
+.fab svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+.fab:active{transform:scale(.94)}
+
+/* ============ lista de negócios ============ */
+.deal{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px;margin-bottom:10px;box-shadow:var(--sh);
+}
+.deal .top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.deal .nm{font-size:16px;font-weight:650;letter-spacing:-.015em;line-height:1.25}
+.deal .meta{font-size:12px;color:var(--muted);margin-top:3px}
+.deal .amt{font-family:var(--mono);font-size:19px;font-weight:600;letter-spacing:-.03em;
+  white-space:nowrap;text-align:right}
+.deal .amt small{display:block;font-size:10.5px;font-weight:400;color:var(--muted);
+  letter-spacing:.06em;text-transform:uppercase;margin-top:2px;font-family:var(--ui)}
+.deal .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.tag{font-family:var(--mono);font-size:11px;font-weight:500;padding:4px 9px;border-radius:7px;
+  background:var(--card-2);color:var(--muted);border:1px solid var(--line-2)}
+.tag.go{background:var(--go-bg);color:var(--go);border-color:transparent}
+.tag.warn{background:var(--warn-bg);color:var(--warn);border-color:transparent}
+.tag.stop{background:var(--stop-bg);color:var(--stop);border-color:transparent}
+.deal .acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.deal .acts button{min-height:40px;border-radius:9px;font-size:14px;font-weight:600;
+  background:var(--card-2);border:1px solid var(--line);color:var(--ink-2)}
+.deal .acts button.sell{background:var(--go);border-color:var(--go);color:var(--on-go)}
+
+.filters{display:flex;gap:7px;margin-bottom:14px;overflow-x:auto;padding-bottom:2px;
+  scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters button{white-space:nowrap;border:1px solid var(--line);background:var(--card);
+  border-radius:999px;padding:8px 14px;font-size:13.5px;font-weight:550;color:var(--muted);min-height:38px}
+#deals{padding-bottom:78px}
+/* Era preto, unico selecionado do app que nao era azul. */
+.filters button[aria-pressed="true"]{background:var(--go);color:var(--on-go);border-color:var(--go)}
+
+.empty{text-align:center;padding:38px 20px;color:var(--muted)}
+.empty svg{width:42px;height:42px;stroke:currentColor;fill:none;stroke-width:1.4;opacity:.45;
+  margin-bottom:12px}
+.empty p{font-size:14.5px;max-width:34ch;margin-inline:auto}
+
+/* ============ sheet / modal ============ */
+.sheet{position:fixed;inset:0;z-index:80;display:flex;align-items:flex-end;justify-content:center}
+.sheet .scrim{position:absolute;inset:0;background:rgba(8,14,28,.6);backdrop-filter:blur(3px)}
+.sheet .body{
+  position:relative;width:100%;max-width:720px;max-height:92vh;overflow-y:auto;
+  background:var(--bg);border-radius:20px 20px 0 0;
+  padding:8px 16px calc(var(--sab) + 22px);
+  -webkit-overflow-scrolling:touch;
+}
+.sheet .grab{width:38px;height:4px;border-radius:99px;background:var(--line);
+  margin:6px auto 12px}
+.sheet h3{font-size:19px;margin-bottom:4px}
+.sheet .lead{font-size:13.5px;color:var(--muted);margin-bottom:16px}
+.fld{margin-bottom:14px}
+.fld label{display:block;font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px}
+.fld input,.fld select,.fld textarea{
+  width:100%;min-height:var(--tap);background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-sm);padding:11px 13px;font-size:16px;
+}
+.fld input[inputmode="decimal"],.fld input[type=number]{font-family:var(--mono);
+  font-variant-numeric:tabular-nums;font-weight:600}
+.fld textarea{min-height:74px;resize:vertical;font-family:var(--ui);font-size:15px}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--go);
+  box-shadow:0 0 0 3px var(--go-bg)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+/* ============ gráfico ============ */
+.chart{margin-top:4px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .tip{
+  position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);
+  border-radius:9px;padding:8px 11px;font-size:12.5px;line-height:1.45;
+  box-shadow:0 6px 20px -8px rgba(0,0,0,.6);z-index:20;white-space:nowrap;
+  font-family:var(--mono);
+}
+.chartwrap{position:relative}
+
+/* ============ manual ============ */
+.prose{font-family:var(--serif);font-size:17px;line-height:1.62;color:var(--ink-2)}
+.prose h3{font-family:var(--ui);font-size:18.5px;color:var(--ink);margin:26px 0 8px}
+.prose h3:first-child{margin-top:0}
+.prose strong{color:var(--ink);font-weight:650}
+.acc{border:1px solid var(--line);border-radius:var(--r);background:var(--card);
+  margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
+.acc > summary{
+  list-style:none;padding:15px 16px;font-size:16px;font-weight:650;letter-spacing:-.015em;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;cursor:pointer;
+}
+.acc > summary::-webkit-details-marker{display:none}
+.acc > summary .n{font-family:var(--mono);font-size:11px;color:var(--go);font-weight:600;
+  letter-spacing:.06em}
+.acc > summary .chev{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .18s;flex:0 0 auto}
+.acc[open] > summary .chev{transform:rotate(180deg)}
+.acc .inner{padding:0 16px 16px;border-top:1px solid var(--line-2);padding-top:14px}
+
+.princ{display:grid;gap:0}
+.princ article{padding:15px 0;border-bottom:1px solid var(--line-2)}
+.princ article:last-child{border-bottom:0;padding-bottom:0}
+.princ h4{font-size:16px;font-weight:650;margin-bottom:4px;letter-spacing:-.015em}
+.princ p{font-size:15px;color:var(--ink-2);margin:0;line-height:1.5}
+.princ .mk{font-family:var(--mono);font-size:10.5px;color:var(--go);font-weight:600;
+  letter-spacing:.1em;display:block;margin-bottom:5px}
+
+.mini{display:grid;gap:9px}
+.mini > div{background:var(--card-2);border-radius:var(--r-sm);padding:12px 13px}
+.mini h5{margin:0 0 3px;font-size:14.5px;font-weight:650;letter-spacing:-.01em}
+.mini p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+.mini .g{font-family:var(--mono);font-size:11px;color:var(--go);font-weight:600;
+  display:block;margin-top:5px}
+
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);
+  border-radius:var(--r-sm);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:330px}
+th{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);
+  font-weight:500;background:var(--card-2)}
+td{padding:10px 12px;border-bottom:1px solid var(--line-2);color:var(--ink-2);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td strong{color:var(--ink);font-weight:650}
+td.n,th.n{text-align:right;font-family:var(--mono);white-space:nowrap}
+
+figure{margin:14px 0 0}
+figure svg{display:block;width:100%;height:auto;background:var(--card-2);
+  border:1px solid var(--line);border-radius:var(--r-sm)}
+figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
+
+.wk{margin-bottom:12px}
+.wk > .h{display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+  margin-bottom:6px;padding-inline:2px}
+.wk > .h .t{font-size:14.5px;font-weight:650;letter-spacing:-.015em}
+.wk > .h .s{font-family:var(--mono);font-size:10px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--muted)}
+.wk ul{list-style:none;margin:0;padding:0;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-sm);overflow:hidden}
+.wk li + li{border-top:1px solid var(--line-2)}
+.wk label{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;
+  padding:12px 14px;font-size:14.5px;color:var(--ink-2);line-height:1.45;cursor:pointer}
+.wk label:active{background:var(--card-2)}
+.wk input[type=checkbox]{width:19px;height:19px;margin:1px 0 0;accent-color:var(--go)}
+.wk input:checked + span{color:var(--muted);text-decoration:line-through;
+  text-decoration-color:var(--line)}
+.prog{height:5px;background:var(--line);border-radius:99px;overflow:hidden;margin:2px 0 6px}
+.prog i{display:block;height:100%;background:var(--go);border-radius:99px;transition:width .25s}
+
+.dont > div{display:grid;grid-template-columns:auto 1fr;gap:11px;padding:13px 0;
+  border-bottom:1px solid var(--line-2)}
+.dont > div:last-child{border-bottom:0}
+.dont .x{color:var(--stop);font-weight:700;font-size:15px;line-height:1.4}
+.dont b{display:block;font-size:15px;font-weight:650;margin-bottom:3px;letter-spacing:-.01em}
+.dont p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.45}
+
+.callout{background:var(--go-bg);border-radius:var(--r-sm);padding:13px 15px;
+  font-size:14.5px;color:var(--ink-2);line-height:1.5}
+.callout.stop{background:var(--stop-bg)}
+.callout strong{color:var(--ink)}
+.callout p:last-child{margin-bottom:0}
+
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(var(--sab) + var(--tabs-h) + 18px);z-index:90;
+  background:var(--ink);color:var(--bg);padding:11px 18px;border-radius:11px;
+  font-size:14px;font-weight:550;box-shadow:0 8px 26px -8px rgba(0,0,0,.6);
+  opacity:0;pointer-events:none;transition:opacity .2s, transform .2s;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(-4px)}
+
+
+/* ============ início: saudação, nível, atenção ============ */
+.greet{padding:4px 2px 16px}
+.greet h2{font-size:clamp(25px,7vw,31px);font-weight:700;letter-spacing:-.03em;line-height:1.12}
+.greet p{margin:6px 0 0;font-size:15px;color:var(--muted);line-height:1.45;max-width:40ch}
+
+.lvl{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:14px 16px;margin-bottom:14px}
+.lvl-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:10px}
+.lvl-n{font-size:16.5px;font-weight:700;letter-spacing:-.02em}
+.lvl-xp{font-size:11.5px;color:var(--muted);margin-left:8px}
+.lvl-next{font-size:11px;color:var(--muted);text-align:right;line-height:1.3}
+.lvl-bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}
+.lvl-bar i{display:block;height:100%;background:var(--go);border-radius:99px;transition:width .4s ease}
+
+.alert{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;
+  background:var(--card);border:1px solid var(--line);border-left:3px solid var(--muted);
+  border-radius:var(--r);padding:13px 15px;margin-bottom:9px;box-shadow:var(--sh);width:100%;text-align:left}
+.alert.stop{border-left-color:var(--stop)}
+.alert.warn{border-left-color:var(--warn)}
+.alert.go{border-left-color:var(--go)}
+.alert .ic{width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+.alert.stop .ic{stroke:var(--stop)} .alert.warn .ic{stroke:var(--warn)} .alert.go .ic{stroke:var(--go)}
+.alert b{display:block;font-size:14.5px;font-weight:650;letter-spacing:-.01em;line-height:1.3}
+.alert span{display:block;font-size:12.5px;color:var(--muted);margin-top:2px;line-height:1.4}
+.alert .go-ic{width:16px;height:16px;stroke:var(--muted);fill:none;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+
+.quick{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0 4px}
+.quick button{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:15px 14px;display:flex;flex-direction:column;
+  align-items:flex-start;gap:3px;min-height:96px;justify-content:center}
+.quick button:active{transform:scale(.985);background:var(--card-2)}
+.quick svg{width:22px;height:22px;stroke:var(--go);fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round;margin-bottom:5px}
+.quick span{font-size:15px;font-weight:650;letter-spacing:-.015em;line-height:1.2}
+.quick small{font-size:11.5px;color:var(--muted);line-height:1.3}
+
+/* ============ insígnias ============ */
+.bdg-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;
+  margin-inline:-16px;padding:2px 16px 4px}
+.bdg-row::-webkit-scrollbar{display:none}
+.bdg-row .bdg{flex:0 0 152px}
+
+.bdg{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:7px;min-height:176px}
+.bdg .hex{width:40px;height:40px;position:relative;display:grid;place-items:center;flex:0 0 auto}
+.bdg .hex svg.bg{position:absolute;inset:0;width:40px;height:40px}
+.bdg .hex svg.gl{position:relative;width:19px;height:19px;stroke:var(--muted);fill:none;
+  stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.bdg.on .hex svg.gl{stroke:#fff}
+.bdg-h{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.bdg b{font-size:13.5px;font-weight:650;letter-spacing:-.01em;line-height:1.25;display:block}
+.bdg-xp{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:.02em;
+  color:var(--muted);background:var(--card-2);border-radius:6px;padding:2px 6px;
+  white-space:nowrap;flex:0 0 auto;line-height:1.5}
+.bdg-xp.on{color:var(--go);background:var(--go-bg)}
+.xp-fonte{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:15px 16px;margin:14px 0 4px;box-shadow:var(--sh)}
+.xp-fonte h4{font-size:14.5px;font-weight:650;margin-bottom:9px;letter-spacing:-.01em}
+.xp-fonte ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.xp-fonte li{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;
+  color:var(--ink-2);line-height:1.4}
+.xp-fonte li b{font-family:var(--mono);font-size:13px;color:var(--go);white-space:nowrap}
+.xp-fonte p{margin:10px 0 0;font-size:12.5px;color:var(--muted);line-height:1.45}
+.bdg p{margin:0;font-size:11.5px;color:var(--muted);line-height:1.38}
+.bdg.on b{color:var(--go)}
+.bdg .pr{height:4px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:auto}
+.bdg .pr i{display:block;height:100%;background:var(--go);border-radius:99px}
+.bdg .pv{font-family:var(--mono);font-size:10.5px;color:var(--muted);letter-spacing:.03em}
+.bdg.on{border-color:color-mix(in srgb, var(--go) 40%, var(--line))}
+
+.conq-hero{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:18px;text-align:center;margin-bottom:6px}
+.conq-n{font-size:34px;font-weight:600;letter-spacing:-.04em;color:var(--go);line-height:1.05}
+.conq-l{font-size:12.5px;color:var(--muted);margin-top:3px}
+.bdg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+@media (max-width:400px){.bdg-grid{grid-template-columns:1fr 1fr}}
+
+@media (min-width:600px){
+  .kpis{grid-template-columns:repeat(3,1fr)}
+  main{padding-inline:20px}
+}
+/* ===== calendário de sazonalidade ===== */
+.cal{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px}
+@media (min-width:600px){ .cal{grid-template-columns:repeat(3,1fr)} }
+@media (min-width:920px){ .cal{grid-template-columns:repeat(4,1fr)} }
+.mo{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);
+  overflow:hidden;position:relative}
+.mo .bar{height:4px;background:var(--line)}
+.mo.buy .bar{background:var(--go)} .mo.buy2 .bar{background:var(--go);height:7px}
+.mo.sell .bar{background:var(--warn)} .mo.sell2 .bar{background:var(--warn);height:7px}
+.mo.hold .bar{background:var(--stop)}
+.mo .in2{padding:11px 12px 12px}
+.mo .m{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--muted);font-weight:600}
+.mo .mode{font-size:14px;font-weight:700;letter-spacing:-.015em;margin-top:5px;line-height:1.2}
+.mo.buy .mode,.mo.buy2 .mode{color:var(--go)}
+.mo.sell .mode,.mo.sell2 .mode{color:var(--warn)}
+.mo.hold .mode{color:var(--stop)}
+.mo.flat .mode{color:var(--muted)}
+.mo .why{font-size:11.5px;color:var(--ink-2);margin-top:6px;line-height:1.4}
+.mo .why b{color:var(--ink);font-weight:650}
+.mo.now{border-color:var(--go);border-width:1.5px}
+.mo.now .m{padding-right:46px}
+.mo .tagn{position:absolute;top:9px;right:9px;font-family:var(--mono);font-size:8.5px;
+  letter-spacing:.07em;text-transform:uppercase;background:var(--go);color:var(--on-go);
+  padding:2px 6px;border-radius:999px;font-weight:700}
+.leg{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px}
+.leg span{display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);background:var(--card-2);
+  border:1px solid var(--line);border-radius:999px;padding:5px 10px 5px 8px}
+.leg i{width:14px;height:4px;border-radius:2px;flex:0 0 auto}
+.leg .l1{background:var(--go)} .leg .l2{background:var(--warn)}
+.leg .l3{background:var(--stop)} .leg .l4{background:var(--line)}
+/* ===== curva ABC ===== */
+.abc{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card);
+  overflow:hidden;margin-bottom:12px}
+.abc .ah{display:grid;grid-template-columns:32px 1fr auto;gap:11px;align-items:center;
+  padding:11px 14px;background:var(--card-2);border-bottom:1px solid var(--line)}
+.abc .cls{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:15px;font-weight:700}
+.abc.a .cls{background:var(--go);color:var(--on-go)}
+.abc.b .cls{background:var(--warn);color:var(--on-warn)}
+.abc.c .cls{background:var(--stop-bg);color:var(--stop)}
+.abc .at{font-size:14.5px;font-weight:660;letter-spacing:-.015em;line-height:1.25}
+.abc .as{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+.abc .pct{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:-.03em;
+  font-variant-numeric:tabular-nums}
+.abc.a .pct{color:var(--go)} .abc.b .pct{color:var(--warn)} .abc.c .pct{color:var(--stop)}
+.abc ul{margin:0;padding:0;list-style:none}
+.abc li{display:grid;grid-template-columns:1fr auto;gap:11px;padding:10px 14px;
+  border-bottom:1px solid var(--line-2);align-items:baseline}
+.abc li:last-child{border-bottom:0}
+.abc li .n3{font-size:13.5px;font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.abc li .d3{font-size:11.5px;color:var(--muted);margin-top:3px;line-height:1.4}
+.abc li .v3{font-family:var(--mono);font-size:12px;font-weight:600;white-space:nowrap;
+  color:var(--ink-2);font-variant-numeric:tabular-nums}
+.abc.a li .v3{color:var(--go)}
+.abc li.kill .n3,.abc li.kill .v3{color:var(--stop)}
+.abc li .star{color:var(--go);font-weight:700}
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <svg class="mark" viewBox="80 136 352 252" aria-hidden="true">
+    <path fill="#5BA8F2" d="M96 212 C96 178 122 152 158 152 L354 152 C390 152 416 178 416 212
+      C416 246 407 290 392 330 C382 356 360 372 334 372 C311 372 293 358 283 338
+      L272 315 C267 305 262 301 256 301 C250 301 245 305 240 315 L229 338
+      C219 358 201 372 178 372 C152 372 130 356 120 330 C105 290 96 246 96 212 Z"/>
+    <rect x="128" y="209" width="78" height="26" rx="8" fill="#101F38"/>
+    <rect x="154" y="183" width="26" height="78" rx="8" fill="#101F38"/>
+    <circle cx="318" cy="248" r="19" fill="#101F38"/>
+    <circle cx="362" cy="204" r="19" fill="#101F38"/>
+  </svg>
+  <div>
+    <div class="ttl" id="bar-title">Painel</div>
+    <div class="sub" id="bar-sub">flip de console · MS</div>
+  </div>
+  <div class="spacer"></div>
+  <button class="iconbtn" id="btn-theme" aria-label="Alternar tema">
+    <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+  </button>
+  <button class="iconbtn" id="btn-data" aria-label="Backup e dados">
+    <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg>
+  </button>
+</header>
+
+<!-- No celular o teto sai da tela assim que voce mexe nos controles, que e
+     exatamente a hora em que voce precisa dele. Esta barra assume o lugar.
+     Mora aqui fora e nao dentro de #v-regua de proposito: .view tem animacao
+     com transform, e transform em um ancestral quebra position:fixed. -->
+<div class="teto-fixo" id="teto-fixo" aria-hidden="true">
+  <span class="tf-cap">Teto</span>
+  <span class="tf-v mono" id="tf-teto">R$ 0</span>
+  <span class="tf-pill" id="tf-pill">—</span>
+</div>
+
+<main>
+  <!-- ============ INÍCIO ============ -->
+  <section class="view" id="v-inicio">
+    <div class="greet">
+      <h2 id="gr-ola">Olá</h2>
+      <p id="gr-sub">—</p>
+    </div>
+
+    <div class="lvl" id="lvl">
+      <div class="lvl-top">
+        <div><span class="lvl-n" id="lvl-nome">Aprendiz</span>
+          <span class="lvl-xp mono" id="lvl-xp">0 XP</span></div>
+        <span class="lvl-next mono" id="lvl-next">—</span>
+      </div>
+      <div class="lvl-bar"><i id="lvl-fill" style="width:0%"></i></div>
+    </div>
+
+    <div id="atencao"></div>
+
+    <div class="quick">
+      <button id="q-regua">
+        <svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="2"/><path d="M7 8v3M12 8v4M17 8v3"/></svg>
+        <span>Calcular teto</span><small>antes de negociar</small></button>
+      <button id="q-novo">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        <span>Lançar negócio</span><small>compra ou venda</small></button>
+    </div>
+
+    <div class="sec" style="display:flex;justify-content:space-between;align-items:baseline">
+      <span>Próximas insígnias</span>
+      <button id="ver-todas" style="font:inherit;font-size:11px;letter-spacing:.06em;color:var(--go)">ver todas</button>
+    </div>
+    <div class="bdg-row" id="bdg-prox"></div>
+
+    <div class="sec" id="sec-resultado">Resultado</div>
+    <div class="kpis three" id="k-top"></div>
+    <div class="card" style="margin-top:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px">
+        <h3 style="font-size:16px" id="chart-title">Lucro por mês</h3>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);margin:2px 0 12px" id="chart-sub">Quando o dinheiro entrou de verdade</p>
+      <div class="seg" style="grid-template-columns:1fr 1fr;margin-bottom:14px">
+        <button id="cm-lucro" aria-pressed="true">Lucro</button>
+        <button id="cm-fat" aria-pressed="false">Faturamento</button>
+      </div>
+      <div class="chartwrap"><div class="chart" id="chart"></div></div>
+    </div>
+    <div class="sec">Saúde da operação</div>
+    <div class="kpis" id="k-saude"></div>
+    <div class="sec">Por categoria</div>
+    <div class="tw"><table id="t-cat"><tbody></tbody></table></div>
+  </section>
+
+  <!-- ============ INSÍGNIAS ============ -->
+  <section class="view" id="v-conquistas" hidden>
+    <div class="conq-hero">
+      <div class="conq-n mono" id="cq-count">0 / 0</div>
+      <div class="conq-l" id="cq-sub">insígnias conquistadas</div>
+      <div class="lvl-bar" style="margin-top:12px"><i id="cq-fill" style="width:0%"></i></div>
+    </div>
+    <div class="xp-fonte">
+      <h4>De onde vem o XP</h4>
+      <ul>
+        <li><span>Cada negócio vendido</span><b>+10 XP</b></li>
+        <li><span>Cada R$ 100 de lucro acumulado</span><b>+1 XP</b></li>
+        <li><span>Insígnias, conforme a dificuldade</span><b>+15 a +130 XP</b></li>
+      </ul>
+      <p>As 18 insígnias somam 920 XP. Níveis: Aprendiz 0 · Garimpeiro 100 ·
+         Negociante 300 · Flipper 700 · Mestre da Bancada 1200.</p>
+    </div>
+    <div id="bdg-grupos"></div>
+    <p style="font-size:12.5px;color:var(--muted);line-height:1.5;margin:18px 2px 0">
+      As insígnias premiam velocidade de giro, margem e honestidade no anúncio —
+      nunca faturamento. Faturar muito girando devagar não destrava nada aqui,
+      de propósito.
+    </p>
+  </section>
+
+  <!-- ============ NEGÓCIOS ============ -->
+  <section class="view" id="v-negocios" hidden>
+    <div class="filters" id="filters">
+      <button data-f="todos" aria-pressed="true">Todos</button>
+      <button data-f="estoque" aria-pressed="false">Em estoque</button>
+      <button data-f="vendido" aria-pressed="false">Vendidos</button>
+      <button data-f="atrasado" aria-pressed="false">Encalhados</button>
+    </div>
+    <div id="deals"></div>
+  </section>
+
+  <!-- ============ RÉGUA ============ -->
+  <section class="view" id="v-regua" hidden>
+    <div class="hero">
+      <div class="cap">Pague no máximo</div>
+      <div class="big mono" id="r-teto">R$ 0</div>
+      <div class="sub" id="r-teto-sub">—</div>
+      <div class="pill p-go" id="r-pill"><span class="dot"></span><span>—</span></div>
+      <div class="verdict-note" id="r-note"></div>
+    </div>
+
+
+    <div class="card">
+      <div class="ctl">
+        <div class="lab"><span class="t">Por quanto você vende</span><span class="v mono" id="lv-venda">R$ 1.350</span></div>
+        <div class="chips scroll" id="presets" style="margin-bottom:10px"></div>
+        <div class="stepper">
+          <button type="button" data-step="r-venda" data-d="-50" aria-label="Diminuir">−</button>
+          <input id="r-venda" type="number" inputmode="decimal" value="1350" min="0" step="50">
+          <button type="button" data-step="r-venda" data-d="50" aria-label="Aumentar">+</button>
+        </div>
+        <input type="range" id="r-venda-s" min="100" max="5000" step="50" value="1350" aria-label="Preço de venda">
+        <div class="hint">O preço de vendas concluídas, não o que os anúncios pedem.</div>
+      </div>
+
+      <div class="ctl">
+        <div class="lab"><span class="t">Margem alvo</span><span class="v mono" id="lv-margem">35%</span></div>
+        <div class="seg" style="grid-template-columns:repeat(5,1fr)" id="seg-margem">
+          <button data-m="25">25%</button>
+          <button data-m="30">30%</button>
+          <button data-m="35" aria-pressed="true">35%</button>
+          <button data-m="40">40%</button>
+          <button data-m="50">50%</button>
+        </div>
+        <div class="hint">35% é o piso para console. Abaixo disso o risco de defeito oculto come o lucro.</div>
+      </div>
+
+      <div class="ctl">
+        <div class="lab"><span class="t">Como você recebe</span></div>
+        <div class="chips" id="canais"></div>
+        <div class="hint" id="canal-hint">PIX é o padrão. Repassando a taxa, o teto não muda.</div>
+      </div>
+
+      <div class="ctl">
+        <div class="lab"><span class="t">Defeito encontrado</span><span class="v mono" id="lv-defeito">Nenhum</span></div>
+        <div class="chips scroll" id="defeitos"></div>
+        <div class="hint" id="defeito-hint">Só para Nintendo Switch. Marque o que a vistoria achou — a peça entra no custo e você ganha o argumento do desconto.</div>
+      </div>
+
+      <div class="ctl">
+        <div class="lab"><span class="t">Peças e insumos</span><span class="v mono" id="lv-insumo">R$ 30</span></div>
+        <div class="chips" id="insumos"></div>
+        <div class="hint">Pasta térmica R$ 12 · potenciômetro R$ 15 · os dois R$ 30.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="ctl" style="margin-bottom:12px">
+        <div class="lab"><span class="t">Quanto ele está pedindo</span><span class="v mono" id="lv-pedido">R$ 950</span></div>
+        <div class="stepper">
+          <button type="button" data-step="r-pedido" data-d="-50" aria-label="Diminuir">−</button>
+          <input id="r-pedido" type="number" inputmode="decimal" value="950" min="0" step="50">
+          <button type="button" data-step="r-pedido" data-d="50" aria-label="Aumentar">+</button>
+        </div>
+      </div>
+      <div class="ruler">
+        <div class="track">
+          <div class="z z-go" id="z-go"></div>
+          <div class="z z-warn" id="z-warn"></div>
+          <div class="z z-stop" id="z-stop"></div>
+          <div class="pin pin-teto" id="pin-teto"></div>
+          <div class="pin pin-ask" id="pin-ask"></div>
+        </div>
+        <div class="legend">
+          <div>Seu teto<b class="mono" id="lg-teto">—</b></div>
+          <div>Ele pede<b class="mono" id="lg-ask">—</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpis" id="r-kpis" style="margin-bottom:14px"></div>
+
+    <button class="btn btn-p" id="r-registrar">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Registrar como negócio
+    </button>
+    <p style="font-size:12.5px;color:var(--muted);margin:10px 2px 0;line-height:1.45">
+      Deslocamento fora da conta — você abate rodando Uber no trajeto.
+    </p>
+  </section>
+
+  <!-- ============ MANUAL ============ -->
+  <section class="view" id="v-manual" hidden>
+    <details class="acc" open>
+      <summary><span><span class="n">01</span> &nbsp;Mentalidade</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <div class="princ">
+          <article><span class="mk">01</span><h4>Você não compra consoles. Compra anúncios ruins.</h4>
+            <p>O aparelho é commodity. O que é escasso é o anúncio malfeito de alguém cansado de esperar.</p></article>
+          <article><span class="mk">02</span><h4>Giro vence margem.</h4>
+            <p>R$ 300 quatro vezes no mês bate R$ 800 uma vez. A pergunta é em quantos dias o dinheiro voltou.</p></article>
+          <article><span class="mk">03</span><h4>O preço é decidido em casa.</h4>
+            <p>Você chega com o número pronto. Lá você só compara e compra ou não compra.</p></article>
+          <article><span class="mk">04</span><h4>Ir embora é de graça.</h4>
+            <p>Não comprar custa a tarde. Comprar errado custa sessenta dias de capital travado mais o desconto para se livrar.</p></article>
+          <article><span class="mk">05</span><h4>Capital parado é o prejuízo que não aparece.</h4>
+            <p>Não tem linha vermelha e não dói. O console encalhado parece patrimônio e é dinheiro morto.</p></article>
+          <article><span class="mk">06</span><h4>Defeito declarado converte mais que defeito escondido.</h4>
+            <p>Quem já viu a foto do risco e veio mesmo assim, veio para comprar.</p></article>
+          <article><span class="mk">07</span><h4>Você não tem uma loja. Tem um ciclo.</h4>
+            <p>Loja mede faturamento. Ciclo mede velocidade e retorno sobre o que está empregado.</p></article>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">02</span> &nbsp;As seis métricas</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <p style="font-size:14.5px;color:var(--muted);margin-bottom:14px">Faturamento não está entre elas, de propósito: não diz nada sem capital, dias e horas.</p>
+        <div class="mini">
+          <div><h5>Dias em estoque</h5><p>Da compra à venda, não do anúncio. É a métrica mãe — define quantas vezes o mesmo dinheiro trabalha no ano. Aos 14 dias sem contato, refaça o anúncio do zero; aos 30, corte 10%.</p><span class="g">meta ≤ 30 d · ideal ≤ 15 d</span></div>
+          <div><h5>Markup</h5><p>Lucro sobre o custo — é assim que se forma preço. Não confunda com margem, que é lucro sobre a venda: markup de 100% é margem de 50%.</p><span class="g">meta ≥ 55% de markup</span></div>
+          <div><h5>Reais por hora</h5><p>Inclui garimpo, mensagens, bancada, fotos e atendimento. Quase ninguém conta as mensagens — e são elas que comem a tarde.</p><span class="g">meta: acima do Uber</span></div>
+          <div><h5>Conversão de garimpo</h5><p>Compras fechadas sobre contatos feitos. Você deve receber muito "não" — é sinal de que o teto está apertado.</p><span class="g">normal: 1 a cada 8–12</span></div>
+          <div><h5>Capital ocioso</h5><p>Dinheiro que não está em item nem em reserva. Rende zero enquanto você acha que está capitalizado.</p><span class="g">meta &lt; 20%</span></div>
+          <div><h5>Índice de retorno</h5><p>Devoluções sobre vendas. Sobe por um motivo só: defeito não declarado. Vendendo com habitualidade você é fornecedor pelo CDC — 90 dias de garantia legal, mesmo em usado.</p><span class="g">meta &lt; 5%</span></div>
+        </div>
+        <div class="callout" style="margin-top:14px">
+          <p><strong>Revise a cada cinco unidades, não todo mês.</strong> Três perguntas com os dados na frente: meu R$/hora bate a alternativa? Qual categoria deu a melhor margem? Qual regra minha custou dinheiro? Mude uma regra por revisão — senão você não sabe qual funcionou.</p>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">03</span> &nbsp;Fotografia</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <p style="font-size:14.5px;color:var(--ink-2);margin-bottom:6px">A foto é onde a maior parte do lucro é criada — é a única coisa que o comprador avalia antes de decidir falar com você. O setup inteiro custa oito reais.</p>
+        <figure>
+          <svg viewBox="0 0 640 330" role="img" aria-label="Planta do setup: janela à esquerda, cartolina branca em L, console ao centro, refletor à direita e celular apoiado de frente">
+            <rect x="110" y="48" width="430" height="222" rx="4" fill="currentColor" opacity="0.05"/>
+            <rect x="24" y="72" width="13" height="168" rx="2" fill="#A8710C"/>
+            <text x="31" y="63" font-family="ui-monospace,monospace" font-size="10.5" fill="#A8710C" text-anchor="middle" font-weight="600">JANELA</text>
+            <text x="8" y="258" font-family="ui-monospace,monospace" font-size="9" fill="#7C8AA0" text-anchor="start">sem sol direto</text>
+            <g stroke="#A8710C" stroke-width="1.2" opacity="0.45" stroke-dasharray="4 4">
+              <line x1="42" y1="104" x2="258" y2="142"/><line x1="42" y1="156" x2="258" y2="162"/><line x1="42" y1="208" x2="258" y2="184"/>
+            </g>
+            <polygon points="258,162 246,156 246,168" fill="#A8710C" opacity="0.75"/>
+            <path d="M 160 86 L 372 86 L 372 112 Q 372 130 354 137 L 160 194 Z" fill="#1863B8" opacity="0.14" stroke="#1863B8" stroke-width="1.4"/>
+            <text x="196" y="104" font-family="ui-monospace,monospace" font-size="9.5" fill="#1863B8" font-weight="600">CARTOLINA BRANCA A2</text>
+            <text x="196" y="117" font-family="ui-monospace,monospace" font-size="8.5" fill="#7C8AA0">curvada em L, sem vinco</text>
+            <rect x="278" y="152" width="84" height="45" rx="3" fill="currentColor" opacity="0.8"/>
+            <rect x="285" y="158" width="70" height="5" rx="2.5" fill="#EFF1F6" opacity="0.5"/>
+            <text x="320" y="216" font-family="ui-monospace,monospace" font-size="9.5" fill="currentColor" text-anchor="middle" font-weight="600" opacity="0.85">CONSOLE</text>
+            <rect x="434" y="124" width="10" height="94" rx="2" fill="#1863B8" opacity="0.5"/>
+            <text x="458" y="158" font-family="ui-monospace,monospace" font-size="9.5" fill="#1863B8" font-weight="600">REFLETOR</text>
+            <text x="458" y="171" font-family="ui-monospace,monospace" font-size="8.5" fill="#7C8AA0">2ª cartolina de pé</text>
+            <text x="458" y="183" font-family="ui-monospace,monospace" font-size="8.5" fill="#7C8AA0">clareia a sombra</text>
+            <g stroke="#1863B8" stroke-width="1" opacity="0.38" stroke-dasharray="3 3">
+              <line x1="430" y1="158" x2="372" y2="168"/><line x1="430" y1="190" x2="372" y2="184"/>
+            </g>
+            <rect x="306" y="242" width="28" height="50" rx="4" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.8"/>
+            <circle cx="320" cy="260" r="5.5" fill="none" stroke="currentColor" stroke-width="1.3" opacity="0.8"/>
+            <line x1="320" y1="238" x2="320" y2="204" stroke="currentColor" stroke-width="1" opacity="0.38" stroke-dasharray="3 3"/>
+            <text x="320" y="308" font-family="ui-monospace,monospace" font-size="9.5" fill="currentColor" text-anchor="middle" font-weight="600" opacity="0.85">CELULAR APOIADO</text>
+            <text x="616" y="62" font-family="ui-monospace,monospace" font-size="8.5" fill="#7C8AA0" text-anchor="end">luz a 45° pela esquerda</text>
+            <text x="616" y="75" font-family="ui-monospace,monospace" font-size="8.5" fill="#7C8AA0" text-anchor="end">flash sempre desligado</text>
+          </svg>
+          <figcaption>Duas cartolinas e uma pilha de livros. A luz difusa entra pela esquerda, o L elimina a linha do horizonte atrás do produto e a segunda cartolina devolve luz na sombra do lado direito.</figcaption>
+        </figure>
+
+        <h3 style="font-family:var(--ui);font-size:16px;margin:20px 0 8px">Quatro ajustes no celular, uma vez só</h3>
+        <div class="mini">
+          <div><h5>Modo Pro</h5><p>Sai do automático. Sem ele, os outros três não existem.</p></div>
+          <div><h5>Balanço de branco travado</h5><p>Preset "nublado", perto de 6500 K. No automático o fundo sai amarelo numa foto e azul na outra.</p></div>
+          <div><h5>ISO no menor valor</h5><p>Menos ruído. Com luz de janela dá e sobra.</p></div>
+          <div><h5>HDR desligado</h5><p>HDR inventa contraste e deixa a foto com cara de filtro.</p></div>
+        </div>
+        <p style="font-size:14px;color:var(--muted);margin-top:12px">Nunca use zoom digital — aproxime o celular. E nunca fotografe segurando: apoie, mesmo que numa pilha de livros.</p>
+
+        <h3 style="font-family:var(--ui);font-size:16px;margin:22px 0 8px">As sete fotos, nesta ordem</h3>
+        <div class="tw">
+          <table><tbody>
+            <tr><td class="n"><strong>01</strong></td><td><strong>Capa, fundo branco.</strong> Produto inteiro, sem tocar as bordas. É a única que decide se ele clica.</td></tr>
+            <tr><td class="n"><strong>02</strong></td><td><strong>Conjunto completo.</strong> Tudo que vai junto, arrumado de cima.</td></tr>
+            <tr><td class="n"><strong>03</strong></td><td><strong>Ligado, com jogo na TV.</strong> Prova de funcionamento — a que mais converte e quase ninguém faz.</td></tr>
+            <tr><td class="n"><strong>04</strong></td><td><strong>Traseira e etiqueta.</strong> Etiqueta de série no lugar, número borrado. Sinaliza procedência.</td></tr>
+            <tr><td class="n"><strong>05</strong></td><td><strong>Close de cada defeito.</strong> Honestidade aqui derruba reclamação lá na frente.</td></tr>
+            <tr><td class="n"><strong>06</strong></td><td><strong>Controles em detalhe.</strong> Grips, gatilhos e analógicos — é onde procuram desgaste.</td></tr>
+            <tr><td class="n"><strong>07</strong></td><td><strong>Vídeo de 40 segundos.</strong> Ligar, entrar no jogo, mexer nos dois analógicos.</td></tr>
+          </tbody></table>
+        </div>
+
+        <h3 style="font-family:var(--ui);font-size:16px;margin:22px 0 8px">Regras do Mercado Livre · Eletrônicos</h3>
+        <div class="tw">
+          <table><tbody>
+            <tr><td><strong>1200 × 1200, quadrado</strong></td><td>O lado maior precisa de ao menos 500 px para o zoom funcionar.</td></tr>
+            <tr><td><strong>Fundo branco na capa</strong></td><td>Obrigatório na categoria. A cartolina já entrega quase isso.</td></tr>
+            <tr><td><strong>Produto 100% visível</strong></td><td>Sem corte e sem encostar nas bordas. Deixe respiro.</td></tr>
+            <tr><td><strong>Capa sem nada escrito</strong></td><td>Proibido logo, marca d'água, telefone, QR, preço, selo ou moldura.</td></tr>
+            <tr><td><strong>Um produto por capa</strong></td><td>Combos vão da segunda foto em diante.</td></tr>
+          </tbody></table>
+        </div>
+
+        <h3 style="font-family:var(--ui);font-size:16px;margin:22px 0 8px">Os cinco erros que derrubam o preço</h3>
+        <div class="dont">
+          <div><span class="x">1</span><div><b>Flash</b><p>Estoura o plástico brilhante e cria sombra dura atrás.</p></div></div>
+          <div><span class="x">2</span><div><b>Chão, cama ou sofá de fundo</b><p>Comunica "quero me livrar disso". Cartolina custa R$ 4.</p></div></div>
+          <div><span class="x">3</span><div><b>Cabos emaranhados na capa</b><p>Cabos vão em foto própria, enrolados.</p></div></div>
+          <div><span class="x">4</span><div><b>Luz de lâmpada amarela</b><p>Deixa o plástico com cara de amarelado — justamente o que derruba preço.</p></div></div>
+          <div><span class="x">5</span><div><b>Foto de longe</b><p>Produto ocupando 20% do quadro. Aproxime até preencher quase tudo.</p></div></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">04</span> &nbsp;Vistoria de 8 minutos</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <div class="callout stop" style="margin-bottom:14px">
+          <p><strong>Antes de qualquer teste:</strong> perfil social real, nome do PIX conferido na tela, foto do RG e do CPF, número de série anotado, recibo assinado. Preço absurdamente abaixo do mercado é o sinal que a lei de receptação descreve — e para servidor público a conta não para no criminal.</p>
+        </div>
+        <div class="wk" id="wk-vistoria"></div>
+        <h3 style="font-family:var(--ui);font-size:16px;margin:22px 0 8px">Abatimento por defeito</h3>
+        <div class="tw">
+          <table>
+            <thead><tr><th>Encontrou</th><th class="n">Abata</th><th>Custa resolver</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Esquenta / desliga sozinho</strong></td><td class="n">150–250</td><td>R$ 12 de pasta e 40 min</td></tr>
+              <tr><td><strong>Drift no analógico</strong></td><td class="n">80–120</td><td>R$ 15 a peça, com solda</td></tr>
+              <tr><td><strong>Não lê disco</strong></td><td class="n">200–350</td><td>Lente ou troca de laser</td></tr>
+              <tr><td><strong>Carcaça riscada / craquelada</strong></td><td class="n">60–120</td><td>Polimento; craquelado não sai</td></tr>
+              <tr><td><strong>Cheiro de cigarro</strong></td><td class="n">100–200</td><td>Carcaça resolve; placa não</td></tr>
+              <tr><td><strong>Falta fonte ou HDMI</strong></td><td class="n">40–90</td><td>Peça de reposição</td></tr>
+              <tr><td><strong>Lacre rompido</strong></td><td class="n">80–150</td><td>Risco — e vai no seu anúncio</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">05</span> &nbsp;Primeiros 30 dias</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <p style="font-size:14.5px;color:var(--ink-2);margin-bottom:14px">O plantão é janela de <strong>observação</strong>: vinte minutos de garimpo no celular. A folga é janela de <strong>ação</strong>. Os dois nunca se misturam — é isso que faz a escala virar vantagem.</p>
+        <div class="prog"><i id="prog-bar" style="width:0%"></i></div>
+        <p class="mono" style="font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin:0 0 14px" id="prog-txt">0 de 0</p>
+        <div id="wk-largada"></div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">06</span> &nbsp;O que não fazer</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+        <div class="dont">
+          <div><span class="x">✕</span><div><b>Comprar sem recibo e sem cópia do documento</b><p>Receptação tem forma culposa. Recibo, RG, CPF, número de série e PIX rastreável — sempre.</p></div></div>
+          <div><span class="x">✕</span><div><b>Pagar em dinheiro vivo</b><p>Sem rastro não há prova de boa-fé. PIX com o nome conferido antes de apertar.</p></div></div>
+          <div><span class="x">✕</span><div><b>Pretinho de pneu no plástico</b><p>Esconde o craquelado por três semanas, migra para o controle e entra na ventilação. Use revitalizador base água, no pano.</p></div></div>
+          <div><span class="x">✕</span><div><b>PS5 não leva pasta térmica</b><p>Usa metal líquido, condutivo, com gaxeta de contenção. No PS5 só limpeza de ventoinha e dissipador — não abra o bloco térmico.</p></div></div>
+          <div><span class="x">✕</span><div><b>Escrever "impecável" sem ter testado</b><p>A oferta vincula e a garantia legal é de 90 dias. Escreva o que testou, fotografe o que está gasto.</p></div></div>
+          <div><span class="x">✕</span><div><b>Parcelar sem repassar a taxa</b><p>12x come 12,4%. Anuncie o preço PIX e informe o do cartão quando perguntarem — Lei 13.455/2017.</p></div></div>
+          <div><span class="x">✕</span><div><b>Dois itens iguais parados ao mesmo tempo</b><p>Você compete consigo mesmo e trava o dobro de capital no mesmo risco.</p></div></div>
+          <div><span class="x">✕</span><div><b>Ir buscar à noite ou em lugar isolado</b><p>Não tem lucro que pague. De dia, movimentado, e alguém sabendo onde você está.</p></div></div>
+        </div>
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">07</span> &nbsp;Simulador de giro</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+
+    <div class="hero" style="margin-top:4px">
+      <div class="cap">Lucro por mês nessa configuração</div>
+      <div class="big mono" id="g-mes">R$ 0</div>
+      <div class="sub" id="g-sub">—</div>
+    </div>
+
+    <div class="card">
+      <div class="ctl">
+        <div class="lab"><span class="t">Capital de trabalho</span><span class="v mono" id="lv-cap">R$ 1.000</span></div>
+        <input type="range" id="g-capital" min="300" max="10000" step="100" value="1000" aria-label="Capital de trabalho">
+        <div class="hint">Só o que pode ficar preso sem afetar o mês.</div>
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="t">Preço médio de compra</span><span class="v mono" id="lv-ticket">R$ 700</span></div>
+        <input type="range" id="g-ticket" min="80" max="3000" step="20" value="700" aria-label="Ticket de compra">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="t">Lucro por unidade</span><span class="v mono" id="lv-lucro">R$ 450</span></div>
+        <input type="range" id="g-lucro" min="20" max="1500" step="10" value="450" aria-label="Lucro por unidade">
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="t">Dias até o dinheiro voltar</span><span class="v mono" id="lv-ciclo">21 d</span></div>
+        <input type="range" id="g-ciclo" min="3" max="90" step="1" value="21" aria-label="Dias de ciclo">
+        <div class="hint">Da compra ao PIX do comprador — não ao dia do anúncio.</div>
+      </div>
+      <div class="ctl">
+        <div class="lab"><span class="t">Reserva intocada</span><span class="v mono" id="lv-res">25%</span></div>
+        <input type="range" id="g-reserva" min="0" max="60" step="5" value="25" aria-label="Reserva">
+        <div class="hint">Para insumos e para a oportunidade que aparece numa terça à noite.</div>
+      </div>
+    </div>
+
+    <div class="kpis" id="g-kpis"></div>
+    <div class="card flat" style="margin-top:14px">
+      <p style="font-size:14.5px;color:var(--ink-2);margin:0;line-height:1.5" id="g-diag"></p>
+    </div>
+
+    <div class="sec">A escada de capital</div>
+    <div class="tw">
+      <table>
+        <thead><tr><th>Faixa</th><th>O que compra</th><th class="n">Ciclo</th></tr></thead>
+        <tbody>
+          <tr><td><strong>até 1.000</strong></td><td>Controles, jogos, headsets, cabos</td><td class="n">7–15 d</td></tr>
+          <tr style="background:var(--go-bg)"><td><strong>1.000–2.500</strong></td><td>Um console + itens pequenos em paralelo</td><td class="n">15–30 d</td></tr>
+          <tr><td><strong>2.500–5.000</strong></td><td>Dois a três consoles girando juntos</td><td class="n">15–30 d</td></tr>
+          <tr><td><strong>5.000+</strong></td><td>Estoque montado, categorias paralelas</td><td class="n">—</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:12px">
+      <p><strong>Na sua faixa, o erro é travar tudo num aparelho só.</strong> Com R$ 1.000 você não tem três relógios correndo — tem um. Um PS4 a R$ 800 prende o capital inteiro até vender. É exatamente por isso que Joy-Con (R$ 150–200 o par) e PS2 (R$ 200–300 o kit) entraram na <strong>curva ABC de produto</strong>, no bloco 09: são as únicas peças que cabem três ou quatro vezes dentro do que você tem.</p>
+    </div>
+        </div>
+    </details>
+    <details class="acc">
+      <summary><span><span class="n">08</span> &nbsp;Calendário de sazonalidade</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+
+    <div class="callout stop" style="margin-bottom:14px">
+      <p><strong>O mercado de console usado tem estação.</strong> Quem compra em janeiro e vende em
+      outubro trabalha com metade do esforço de quem compra e vende no mesmo mês.</p>
+    </div>
+
+    <div class="leg">
+      <span><i class="l1"></i>comprar</span>
+      <span><i class="l2"></i>vender</span>
+      <span><i class="l3"></i>parcimônia</span>
+      <span><i class="l4"></i>girar normal</span>
+    </div>
+
+    <div class="cal">
+      <div class="mo buy2"><div class="bar"></div><div class="in2"><div class="m">Janeiro</div><div class="mode">Compra máxima</div><div class="why">Quem ganhou console no Natal vende o antigo. <b>IPVA, IPTU, matrícula</b> e a fatura de dezembro chegam juntos. Oferta no teto, demanda no piso — <b>é o chão do ano</b>.</div></div></div>
+      <div class="mo buy"><div class="bar"></div><div class="in2"><div class="m">Fevereiro</div><div class="mode">Compra</div><div class="why">Carnaval drena caixa e a pressão de janeiro continua.</div></div></div>
+      <div class="mo flat"><div class="bar"></div><div class="in2"><div class="m">Março</div><div class="mode">Gira</div><div class="why">Mercado normaliza. É quando você vende o que garimpou barato em janeiro.</div></div></div>
+      <div class="mo flat"><div class="bar"></div><div class="in2"><div class="m">Abril</div><div class="mode">Gira</div><div class="why">Equilíbrio. Páscoa não move console.</div></div></div>
+      <div class="mo sell"><div class="bar"></div><div class="in2"><div class="m">Maio</div><div class="mode">Vende fraco</div><div class="why">Dia das Mães aquece o comércio, mas <b>console não é presente de mãe</b>.</div></div></div>
+      <div class="mo flat"><div class="bar"></div><div class="in2"><div class="m">Junho</div><div class="mode">Neutro</div><div class="why">Dia dos Namorados move pouco. Festa junina puxa dinheiro pra outro lado.</div></div></div>
+      <div class="mo sell"><div class="bar"></div><div class="in2"><div class="m">Julho</div><div class="mode">Vende</div><div class="why"><b>Férias escolares.</b> Criança em casa o dia inteiro = pai comprando console.</div></div></div>
+      <div class="mo sell"><div class="bar"></div><div class="in2"><div class="m">Agosto</div><div class="mode">Vende</div><div class="why"><b>Dia dos Pais.</b> Console é presente clássico de pai — diferente do Dia das Mães.</div></div></div>
+      <div class="mo buy now"><div class="bar"></div><span class="tagn">agora</span><div class="in2"><div class="m">Setembro</div><div class="mode">Compra p/ outubro</div><div class="why">Monta estoque pro pico. <b>Nas duas últimas semanas a demanda já começa.</b></div></div></div>
+      <div class="mo sell2"><div class="bar"></div><div class="in2"><div class="m">Outubro</div><div class="mode">Venda máxima</div><div class="why"><b>Dia das Crianças, 12/10.</b> Pico do ano, concentrado nos dias 1 a 11 — depois do 12 cai de pedra.</div></div></div>
+      <div class="mo hold"><div class="bar"></div><div class="in2"><div class="m">Novembro</div><div class="mode">Parcimônia</div><div class="why"><b>Black Friday.</b> Lacrado despenca e puxa o teto do usado junto.</div></div></div>
+      <div class="mo sell2"><div class="bar"></div><div class="in2"><div class="m">Dezembro</div><div class="mode">Vende até dia 20</div><div class="why">13º 2ª parcela + Natal. <b>Depois do dia 20 é zona morta.</b></div></div></div>
+    </div>
+
+    <div class="sec">As quatro janelas de ficar quieto</div>
+    <div class="mini">
+      <div><h5>1 · A semana da Black Friday</h5><p>Não compre usado a preço cheio — o piso vai cair e você não controla. Não anuncie — ninguém olha usado quando o lacrado está com desconto.<span class="g">espere passar e compre de quem trocou de console</span></p></div>
+      <div><h5>2 · De 20 a 31 de dezembro</h5><p>Tarde pra virar presente, cedo pra onda de janeiro. Ninguém compra e ninguém vende barato.<span class="g">use pra limpar e fotografar estoque</span></p></div>
+      <div><h5>3 · De 13 a 31 de outubro</h5><p>Passou o Dia das Crianças, demanda cai de pedra. O que não vendeu até o dia 11 encalha até dezembro.<span class="g">não baixe preço em pânico no dia 13 — segure pro Natal</span></p></div>
+      <div><h5>4 · Quando sai promoção de lacrado</h5><p>Sem data fixa. PS5 Slim Digital novo a R$ 3.200 congela todo PS5 usado acima de R$ 2.900 no mesmo dia.<span class="g">antes de comprar console acima de R$ 2.000, cheque o lacrado</span></p></div>
+    </div>
+
+    <div class="callout" style="margin-top:14px">
+      <p><strong>A regra que vale mais que o calendário inteiro:</strong> com capital pequeno,
+      <strong>a sazonalidade de compra vale mais que a de venda</strong>. Segurar um console de janeiro
+      até julho trava R$ 800 por seis meses — e é o giro, não a margem unitária, que multiplica capital
+      pequeno. Compre barato em janeiro e venda em fevereiro com margem normal.</p>
+    </div>
+
+      </div>
+    </details>
+
+    <details class="acc">
+      <summary><span><span class="n">09</span> &nbsp;Curva ABC</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+      <div class="inner">
+
+    <div class="sec">Onde o dinheiro realmente nasce</div>
+    <p style="font-size:14px;color:var(--ink-2);line-height:1.55;margin:0 0 12px">
+      Num flip típico — compra R$ 800, venda R$ 1.350. Se você reanunciasse o console do jeito que
+      recebeu, com a foto do vendedor, ele sairia por uns R$ 950. <strong>A diferença é trabalho seu.</strong></p>
+
+    <div class="abc a">
+      <div class="ah"><span class="cls">A</span><div><div class="at">Apresentação e garimpo</div><div class="as">custa R$ 5 e uma hora</div></div><span class="pct">85%</span></div>
+      <ul>
+        <li><div><div class="n3">Limpeza, foto, descrição e teste</div><div class="d3">R$ 5 de consumível e 1h de trabalho</div></div><span class="v3">50–70×</span></li>
+        <li><div><div class="n3">Achar vendedor cansado</div><div class="d3">13+ semanas no ar, preço já cortado. Custa só tempo</div></div><span class="v3">R$ 150–800</span></li>
+        <li><div><div class="n3">Abatimento por defeito declarado</div><div class="d3">Ele mesmo escreveu no anúncio. Custo zero</div></div><span class="v3">R$ 50–250</span></li>
+      </ul>
+    </div>
+
+    <div class="abc b">
+      <div class="ah"><span class="cls">B</span><div><div class="at">Reparo nível 0 e 1</div><div class="as">peça barata, mas depende de você ter a mão</div></div><span class="pct">12%</span></div>
+      <ul>
+        <li><div><div class="n3">Potenciômetro do 2º controle</div><div class="d3">R$ 28 viram R$ 100–130 no combo</div></div><span class="v3">4–5×</span></li>
+        <li><div><div class="n3">Pasta térmica</div><div class="d3">R$ 7 por aplicação, vale R$ 150 de abatimento</div></div><span class="v3">20×</span></li>
+        <li><div><div class="n3">Bateria de controle</div><div class="d3">15 min, sem solda. Evita devolução nos 90 dias</div></div><span class="v3">1,1×</span></li>
+      </ul>
+    </div>
+
+    <div class="abc c">
+      <div class="ah"><span class="cls">C</span><div><div class="at">Extras do pacote</div><div class="as">contam no preço, mas não é onde você ganha</div></div><span class="pct">3%</span></div>
+      <ul>
+        <li><div><div class="n3">Jogos físicos</div><div class="d3">Valem, mas você não cria esse valor — só revende</div></div><span class="v3">R$ 45–130</span></li>
+        <li><div><div class="n3">Caixa original</div><div class="d3">Fecha negócio e é sinal anti-receptação</div></div><span class="v3">R$ 50–150</span></li>
+        <li class="kill"><div><div class="n3">Jogos digitais na conta do vendedor</div><div class="d3">Somem na restauração e a conta não transfere</div></div><span class="v3">R$ 0</span></li>
+      </ul>
+    </div>
+
+    <div class="callout">
+      <p><strong>A classe A custa R$ 5 e uma hora e responde por 85% da margem.</strong>
+      Você não precisa virar técnico pra ganhar dinheiro com isso — precisa virar bom garimpeiro e bom
+      fotógrafo. O reparo é o que impede a devolução, não o que gera o lucro.</p>
+    </div>
+
+    <div class="sec" style="margin-top:22px">Curva ABC de produto — o que R$ 1.000 alcança</div>
+    <p style="font-size:14px;color:var(--ink-2);line-height:1.55;margin:0 0 12px">
+      Aqui a classe não é pela margem por peça. É pelo <strong>giro que o seu capital aguenta</strong>.
+      Uma peça de R$ 350 que gira em 10 dias bate uma de R$ 1.100 que gira em 15, porque você faz
+      ela três vezes no mesmo mês.</p>
+
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th>Produto</th><th class="n">Un.</th><th class="n">Margem</th><th>Veredito</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Joy-Con c/ drift</strong><br><span style="font-size:12px;color:var(--muted)">par · fecha 280–350 · 7–14 dias</span></td>
+            <td class="n"><strong>5–6</strong></td><td class="n">100–150</td>
+            <td><span class="tag go">entra</span></td>
+          </tr>
+          <tr>
+            <td><strong>PS2 kit montado</strong><br><span style="font-size:12px;color:var(--muted)">fecha 400–550 · 15–30 dias</span></td>
+            <td class="n"><strong>3–4</strong></td><td class="n">120–200</td>
+            <td><span class="tag go">entra</span></td>
+          </tr>
+          <tr>
+            <td><strong>PS4 Slim / Pro</strong><br><span style="font-size:12px;color:var(--muted)">fecha 1.250–1.350 · 10–20 dias</span></td>
+            <td class="n"><strong>1</strong></td><td class="n">250–350</td>
+            <td><span class="tag go">base</span></td>
+          </tr>
+          <tr>
+            <td><strong>PS3 Slim / Super Slim</strong><br><span style="font-size:12px;color:var(--muted)">CECH-2xxx a 4xxx · 20–45 dias</span></td>
+            <td class="n"><strong>1–2</strong></td><td class="n">150–250</td>
+            <td><span class="tag warn">trava</span></td>
+          </tr>
+          <tr>
+            <td><strong>Switch V1 / V2</strong><br><span style="font-size:12px;color:var(--muted)">fecha 1.530–1.620 · 7–15 dias</span></td>
+            <td class="n"><strong>0</strong></td><td class="n">250–350</td>
+            <td><span class="tag warn">destino</span></td>
+          </tr>
+          <tr>
+            <td><strong>Switch 2</strong><br><span style="font-size:12px;color:var(--muted)">fecha 2.900–3.300 · 15–40 dias</span></td>
+            <td class="n"><strong>0</strong></td><td class="n">150–300</td>
+            <td><span class="tag stop">cilada</span></td>
+          </tr>
+          <tr>
+            <td><strong>PS3 Fat</strong><br><span style="font-size:12px;color:var(--muted)">90nm e 65nm · YLOD de solda</span></td>
+            <td class="n">—</td><td class="n">—</td>
+            <td><span class="tag stop">nunca</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mini" style="margin-top:14px">
+      <div>
+        <h5>PS2 — o único console que o seu capital compra em quantidade</h5>
+        <p>Você acha PS2 sem cabo, sem controle e sem memory card por R$ 120–180 porque ninguém
+        quer o trabalho de completar. Completar custa R$ 80–120 em peças de mercado livre e uma
+        tarde. O kit montado, fotografado ligado na TV rodando um jogo, fecha R$ 400–550.
+        É a maior margem percentual da lista: <span class="g">60–90%</span></p>
+      </div>
+      <div>
+        <h5>Joy-Con com drift — o melhor retorno por real investido</h5>
+        <p>Mais de mil anúncios ativos, quase todos com o mesmo defeito, e o conserto é um
+        conector ZIF: abre, troca o potenciômetro de R$ 28, fecha. Sem solda. Compra o par a
+        R$ 150–200, vende a R$ 280–350 em 7 a 14 dias. Cinco pares cabem no seu capital.
+        <span class="g">giro mais rápido da operação</span></p>
+      </div>
+      <div>
+        <h5>PS3 — só Slim e Super Slim, e mesmo assim com desconto de risco</h5>
+        <p>O YLOD do Fat passa no seu teste de dez minutos e mata o console três semanas depois,
+        dentro dos 90 dias do CDC. Você devolve o dinheiro e perde a peça. Slim e Super Slim
+        (CECH-2xxx em diante) não têm esse problema, mas o giro é lento: 20 a 45 dias parado
+        segurando R$ 500 seu.</p>
+      </div>
+      <div>
+        <h5>Switch 2 — a conta não fecha, e por um motivo específico</h5>
+        <p>O lacrado de particular está saindo a R$ 3.550, bem abaixo dos R$ 4.599,90 de tabela.
+        Isso esmaga o usado: você compraria a R$ 2.900–3.000 pra vender a R$ 3.250. São 8 a 10%
+        de margem segurando três mil reais por mais de um mês. <strong>É trabalho de loja, não
+        de flip.</strong></p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>A leitura prática:</strong> enquanto você tiver R$ 1.000, o PS4 é um flip por ciclo
+      e trava todo o seu capital. Joy-Con e PS2 rodam <em>em paralelo</em> com o PS4 parado esperando
+      comprador — ou sozinhos, três a cinco peças girando ao mesmo tempo. O Switch é o destino
+      quando o capital passar de R$ 2.500, não uma opção de hoje.</p>
+    </div>
+
+    <div class="sec" style="margin-top:22px">Curva ABC de sinal — o que no anúncio prevê o negócio</div>
+    <p style="font-size:14px;color:var(--ink-2);line-height:1.55;margin:0 0 12px">
+      Dos vinte e poucos anúncios que a gente avaliou, esses foram os sinais que realmente
+      separaram os bons dos ruins. Os de classe A você lê em três segundos, antes de abrir o anúncio.</p>
+
+    <div class="abc a">
+      <div class="ah"><span class="cls">A</span><div><div class="at">Sinais que decidem</div><div class="as">visíveis na listagem, sem abrir</div></div><span class="pct">80%</span></div>
+      <ul>
+        <li><div><div class="n3">Semanas no ar</div><div class="d3">3+ semanas = vendedor cansado. Foi o caso do Felipe e da Juliana</div></div><span class="v3">★★★</span></li>
+        <li><div><div class="n3">Foto ruim, texto curto</div><div class="d3">Quem não sabe anunciar não sabe precificar. É onde mora o desconto</div></div><span class="v3">★★★</span></li>
+        <li><div><div class="n3">Cidade pequena</div><div class="d3">Menos compradores disputando. Sidrolândia, Maracaju, Aquidauana</div></div><span class="v3">★★</span></li>
+        <li><div><div class="n3">Preço fora da curva pra baixo</div><div class="d3">Bom quando explicado, alerta de receptação quando não é</div></div><span class="v3">★★</span></li>
+      </ul>
+    </div>
+
+    <div class="abc b">
+      <div class="ah"><span class="cls">B</span><div><div class="at">Sinais que ajustam o teto</div><div class="as">mudam o preço, não a decisão</div></div><span class="pct">17%</span></div>
+      <ul>
+        <li><div><div class="n3">Nº de controles</div><div class="d3">O 2º controle soma R$ 150 na revenda e custa pouco no combo</div></div><span class="v3">+R$ 150</span></li>
+        <li><div><div class="n3">Jogos físicos citados por nome</div><div class="d3">Nome = existe. "Vários jogos" = digital, na conta dele</div></div><span class="v3">+R$ 45–130</span></li>
+        <li><div><div class="n3">Caixa original</div><div class="d3">Fecha venda e vale como procedência</div></div><span class="v3">+R$ 50–150</span></li>
+      </ul>
+    </div>
+
+    <div class="abc c">
+      <div class="ah"><span class="cls">C</span><div><div class="at">Ruído</div><div class="as">parece informação e não é</div></div><span class="pct">3%</span></div>
+      <ul>
+        <li class="kill"><div><div class="n3">"Pouco usado", "de segunda dona"</div><div class="d3">Não é verificável e não muda nada no teste</div></div><span class="v3">R$ 0</span></li>
+        <li class="kill"><div><div class="n3">Console envelopado / edição temática</div><div class="d3">O do Sam é MW II. Não somou nada no preço de venda</div></div><span class="v3">R$ 0</span></li>
+        <li class="kill"><div><div class="n3">Descrição longa e bem escrita</div><div class="d3">Sinal de vendedor que pesquisou preço. Margem menor</div></div><span class="v3">negativo</span></li>
+      </ul>
+    </div>
+
+    <div class="callout stop">
+      <p><strong>O sinal A mais forte não está no anúncio:</strong> é quanto tempo você consegue
+      esperar. Com R$ 1.000, comprar o segundo console antes de vender o primeiro não é opção.
+      Quem tem pressa de comprar paga caro — quem tem pressa de vender vende barato. Você não
+      pode ter as duas.</p>
+    </div>
+
+      </div>
+    </details>
+
+    <p style="font-size:12px;color:var(--muted);text-align:center;margin:22px 0 0;line-height:1.5">
+      Taxas e preços verificados em 17/09/2026.<br>Reconfira a cada trimestre.
+    </p>
+  </section>
+</main>
+
+<button class="fab" id="fab" hidden aria-label="Novo negócio">
+  <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+</button>
+
+<nav class="tabs" role="tablist">
+  <div class="side-brand" aria-hidden="true">
+    <svg viewBox="80 136 352 252">
+      <path fill="#5BA8F2" d="M96 212 C96 178 122 152 158 152 L354 152 C390 152 416 178 416 212
+        C416 246 407 290 392 330 C382 356 360 372 334 372 C311 372 293 358 283 338
+        L272 315 C267 305 262 301 256 301 C250 301 245 305 240 315 L229 338
+        C219 358 201 372 178 372 C152 372 130 356 120 330 C105 290 96 246 96 212 Z"/>
+      <rect x="128" y="209" width="78" height="26" rx="8" fill="#101F38"/>
+      <rect x="154" y="183" width="26" height="78" rx="8" fill="#101F38"/>
+      <circle cx="318" cy="248" r="19" fill="#101F38"/>
+      <circle cx="362" cy="204" r="19" fill="#101F38"/>
+    </svg>
+    <span>MeuFLIP</span>
+  </div>
+  <button role="tab" data-v="inicio" aria-selected="true">
+    <svg viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V20h13V9.5"/></svg><span>Início</span><kbd>1</kbd></button>
+  <button role="tab" data-v="negocios" aria-selected="false">
+    <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg><span>Negócios</span><kbd>2</kbd></button>
+  <button role="tab" data-v="regua" aria-selected="false">
+    <svg viewBox="0 0 24 24"><rect x="2" y="8" width="20" height="8" rx="2"/><path d="M7 8v3M12 8v4M17 8v3"/></svg><span>Régua</span><kbd>3</kbd></button>
+  <button role="tab" data-v="conquistas" aria-selected="false">
+    <svg viewBox="0 0 24 24"><path d="M8 3h8v5a4 4 0 0 1-8 0z"/><path d="M8 5H5v1.5A3.5 3.5 0 0 0 8 10M16 5h3v1.5A3.5 3.5 0 0 1 16 10"/><path d="M12 12v4M9 20h6M10 16h4l.5 4h-5z"/></svg><span>Insígnias</span><kbd>4</kbd></button>
+  <button role="tab" data-v="manual" aria-selected="false">
+    <svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 1 6.5 18H20v3H6.5"/></svg><span>Manual</span><kbd>5</kbd></button>
+</nav>
+
+<div class="toast" id="toast"></div>
+<div id="sheet-host"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ===================== util ===================== */
+var BRL  = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',maximumFractionDigits:0});
+var BRL2 = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:2,maximumFractionDigits:2});
+function money(n){ return BRL.format(isFinite(n)?n:0); }
+function pc(x){ return (isFinite(x)? (x*100) : 0).toFixed(0).replace('.',',') + '%'; }
+function $(id){ return document.getElementById(id); }
+function el(t,c,x){ var e=document.createElement(t); if(c)e.className=c; if(x!=null)e.textContent=x; return e; }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,function(m){
+  return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+function today(){ var d=new Date(); return d.toISOString().slice(0,10); }
+function days(a,b){ if(!a) return 0; var A=new Date(a+'T12:00'), B=b?new Date(b+'T12:00'):new Date();
+  return Math.max(0, Math.round((B-A)/864e5)); }
+function mesLabel(iso){
+  var M=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  var p=iso.split('-'); return M[parseInt(p[1],10)-1] + '/' + p[0].slice(2);
+}
+var toastT;
+function toast(msg){
+  var t=$('toast'); t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(function(){ t.classList.remove('on'); },2100);
+}
+
+/* ===================== dados de referência ===================== */
+var CANAIS = [
+  {k:'pix',   n:'PIX / dinheiro',  p:0,      f:0,  h:'Zero taxa, cai na hora. É o padrão.'},
+  {k:'rep',   n:'Taxa repassada',  p:0,      f:0,  h:'O comprador paga o acréscimo — Lei 13.455/2017. O teto não muda.'},
+  {k:'deb',   n:'Débito',          p:0.0137, f:0,  h:'InfiniteTap 1,37%, cai em 1 dia útil.'},
+  {k:'cr1',   n:'Crédito 1x',      p:0.0315, f:0,  h:'InfiniteTap 3,15%.'},
+  {k:'cr10',  n:'Crédito 10x',     p:0.1106, f:0,  h:'InfiniteTap 11,06%. Sem repasse, come um terço do lucro.'},
+  {k:'cr12',  n:'Crédito 12x',     p:0.1240, f:0,  h:'InfiniteTap 12,40%. Sem repasse, esquece.'},
+  {k:'ml',    n:'Mercado Livre',   p:0.13,   f:55, h:'13% de comissão + frete grátis obrigatório acima de R$ 79.'},
+  {k:'shop',  n:'Shopee',          p:0.14,   f:26, h:'14% + R$ 26 fixos por item.'}
+];
+function canal(k){ for(var i=0;i<CANAIS.length;i++) if(CANAIS[i].k===k) return CANAIS[i]; return CANAIS[0]; }
+
+/* pl = plataforma, decide quais defeitos aparecem na Regua */
+var PRESETS = [
+  {n:'PS5 Slim',       g:'PS5',    s:'Slim',       v:3600},
+  {n:'PS5',            g:'PS5',    s:'Fat',        v:3400},
+  {n:'PS4 Pro',        g:'PS4',    s:'Pro',        v:1700},
+  {n:'PS4 Slim',       g:'PS4',    s:'Slim',       v:1350},
+  {n:'PS3 Super Slim', g:'PS3',    s:'Super Slim', v:600,  pl:'ps3'},
+  {n:'PS3 Slim',       g:'PS3',    s:'Slim',       v:550,  pl:'ps3'},
+  {n:'PS3 Fat',        g:'PS3',    s:'Fat',        v:420,  pl:'ps3'},
+  {n:'Xbox Series S',  g:'Xbox',   s:'Series S',   v:1600},
+  {n:'Xbox One',       g:'Xbox',   s:'One',        v:900},
+  {n:'Switch 2',       g:'Switch', s:'2',          v:3400, pl:'sw'},
+  {n:'Switch OLED',    g:'Switch', s:'OLED',       v:1500, pl:'sw'},
+  {n:'Switch V2',      g:'Switch', s:'V2',         v:1300, pl:'sw'},
+  {n:'Switch V1',      g:'Switch', s:'V1',         v:1050, pl:'sw'},
+  {n:'Switch Lite',    g:'Switch', s:'Lite',       v:950,  pl:'sw'},
+  {n:'Controle',       g:'Peça',   s:'Controle',   v:220},
+  {n:'Jogo',           g:'Peça',   s:'Jogo',       v:120}
+];
+var CATS = ['Console','Controle','Jogo','Acessório','Lote'];
+var INSUMOS = [0,12,15,30,50,80,140,250];
+
+/* Nintendo Switch — o que a vistoria achou.
+   d = desconto que você argumenta com o vendedor (o que uma assistência cobraria)
+   p = o que a peça custa pra você. A diferença entre os dois é onde o flip ganha. */
+var DEFEITOS = [
+  {k:'ok',  n:'Nenhum', pl:'*',             d:0,   p:30,   h:'Unidade limpa. O teto é o cheio.'},
+  {k:'dr1', pl:'sw', n:'Drift 1 analógico',  d:90,  p:30,  h:'Módulo R$ 25 · Hall effect R$ 60 · 40 min de bancada.'},
+  {k:'dr2', pl:'sw', n:'Drift nos 2',        d:170, p:60,  h:'Par de módulos · 1h20. O defeito mais comum de todos.'},
+  {k:'tri', pl:'sw', n:'Trilho do Joy-Con',  d:150, p:70,  h:'Rail com flat. Sintoma: não reconhece o controle de um lado.'},
+  {k:'bat', pl:'sw', n:'Bateria viciada',    d:200, p:140, h:'HAC-003. Não serve na Lite — a dela é outra.'},
+  {k:'car', pl:'sw', n:'Não lê cartucho',    d:180, p:80,  h:'Leitor R$ 60–100. Leve um cartucho seu pra testar.'},
+  {k:'tmp', pl:'sw', n:'Esquenta / desliga', d:150, p:30,  h:'Quase sempre é só cooler entupido + pasta térmica. A melhor compra que existe.'},
+  {k:'ris', pl:'sw', n:'Tela riscada',       d:60,  p:30,  h:'Risco do dock. Película nova resolve o leve.'},
+  {k:'usb', pl:'sw', n:'Não carrega',        d:250, p:50,  h:'Conector USB-C, precisa solda. Se esquentar na base é o chip M92T36 — recuse.'},
+  {k:'acc', pl:'sw', n:'Sem Joy-Con / dock', d:350, p:250, h:'Par de Joy-Con usado R$ 250 · dock R$ 100.'},
+  {k:'tel', pl:'sw', n:'Tela trincada',      d:400, p:250, h:'LCD compatível R$ 180–300. Na OLED a peça passa de R$ 400 — não compre.'},
+  {k:'ban', pl:'sw', n:'Banido 2124-4007',   d:400, p:0,   v:0.62, h:'Não é conserto, é perda de valor: sem eShop e sem online, só vende offline e com aviso no recibo. A venda cai sozinha para 62%.'},
+
+  /* PlayStation 3 — numa assistência com 560+ aparelhos, YLOD é 43% da fila
+     de conserto e falta de vídeo 17%. Repare que a parte cara do PS3 é
+     justamente a que você ainda não faz (reballing). */
+  {k:'p3ylod', n:'Luz amarela (YLOD)', pl:'ps3', d:0, p:0, v:0.35,
+   h:'Solda da CPU/GPU soltou. Reballing custa ~R$ 330 numa assistência e costuma voltar em meses. Compre só como peça, e anuncie como peça.'},
+  {k:'p3vid', n:'Liga mas sem vídeo', pl:'ps3', d:300, p:80,
+   h:'Porta HDMI ou o chip de vídeo. A porta é R$ 80 e precisa solda; se for o chip, é o mesmo buraco do YLOD — teste com cabo AV antes de fechar.'},
+  {k:'p3leit', n:'Não lê disco', pl:'ps3', d:250, p:130,
+   h:'Leitor KES-450A sai por R$ 106–137. Troca limpa, sem solda: o melhor defeito de PS3 pra comprar.'},
+  {k:'p3font', n:'Desliga sozinho', pl:'ps3', d:280, p:120,
+   h:'Fonte instável. Peça R$ 120. Confirme jogando 20 min — desligar frio é fonte, desligar quente é térmico.'},
+  {k:'p3temp', n:'Cooler barulhento', pl:'ps3', d:150, p:30,
+   h:'Poeira e pasta ressecada. R$ 30 e uma hora. É o defeito que mais dá lucro, porque o dono acha que é YLOD chegando.'},
+  {k:'p3ctr', n:'Sem controle', pl:'ps3', d:120, p:80,
+   h:'DualShock 3 usado sai por R$ 80. Cuidado com controle genérico: não segura carga e volta como reclamação.'},
+  {k:'p3hd', n:'Sem HD', pl:'ps3', d:100, p:90,
+   h:'HD de notebook SATA 500GB, R$ 90. Instalação é parafuso e formatação pelo próprio console.'}
+];
+function defeito(k){ for(var i=0;i<DEFEITOS.length;i++) if(DEFEITOS[i].k===k) return DEFEITOS[i]; return DEFEITOS[0]; }
+
+var VISTORIA_SW = [
+  'Config → Console: número de série bate com o anúncio',
+  'Teste de internet: sem erro 2124-4007 (banido é permanente)',
+  'Calibrar analógicos e soltar o dedo — o ponto não pode andar sozinho',
+  'Bateria: anota a % e joga 15 min (queda acima de 15 pontos = viciada)',
+  'Encaixa e solta cada Joy-Con três vezes',
+  'Põe no dock e confirma imagem na TV (testa dock, fonte e USB-C de uma vez)',
+  'Enfia um cartucho seu e vê se reconhece na hora',
+  'Tela inteira no teclado do Wi-Fi e olha contra a luz procurando trinca',
+  'Vendedor desativa a conta Nintendo dele na sua frente',
+  'Confere todos os acessórios prometidos'
+];
+var VISTORIA_MESA = ['Liga e chega ao menu sem reiniciar',
+  'Roda jogo pesado 15 min com a mão na saída de ar',
+  'Insere e ejeta disco duas vezes, escutando o motor',
+  'Cada controle: analógicos em 360°, gatilhos e D-pad',
+  'Cada controle carrega de verdade pelo cabo',
+  'Troca o HDMI de porta na TV e confirma imagem',
+  'Entra no Wi-Fi e abre a loja (não está banido)',
+  'Vendedor desativa a conta dele na sua frente',
+  'Confere lacre e marcas de abertura',
+  'Cheiro: sem cigarro, sem mofo, sem queimado',
+  'Confere todos os acessórios prometidos'];
+var VISTORIA = VISTORIA_MESA;
+
+var LARGADA = [
+  {t:'Semana 1 — Calibrar', s:'zero compras · R$ 60', i:[
+    'Levantar o preço REAL de 10 anúncios com contador de vendidos',
+    'Salvar alertas no OLX: Campo Grande, Sidrolândia, Ribas do Rio Pardo',
+    'Montar o fundo de cartolina em L perto da janela',
+    'Travar modo Pro, balanço de branco e ISO; tirar 20 fotos de teste',
+    'Imprimir o checklist de vistoria e deixar no carro']},
+  {t:'Semana 2 — Garimpar sem comprar', s:'20 min por dia, no plantão', i:[
+    'Varrer com os filtros: não liga, com defeito, não testei, para peças, urgente',
+    'Listar 10 candidatos: poucas fotos, sem descrição, 14+ dias no ar',
+    'Calcular o teto de cada um na Régua',
+    'Descartar os que não cabem e reparar em quantos são',
+    'Abrir conversa com 5 vendedores, sem oferta ainda']},
+  {t:'Semana 3 — A primeira compra', s:'uma unidade só', i:[
+    'Fazer a oferta abaixo do teto nos 3 mais promissores',
+    'Sustentar o número uma vez. Ir embora de dois deles',
+    'Vistoria completa, de dia, com o checklist na mão',
+    'Recibo assinado, documento fotografado, PIX com nome conferido',
+    'Registrar a compra no app no mesmo dia']},
+  {t:'Semana 4 — Recondicionar e vender', s:'onde o lucro é criado', i:[
+    'Limpeza, pasta térmica, revitalizador base água',
+    'As 7 fotos no fundo branco e o vídeo de 40 segundos',
+    'Descrição itemizada: o que testei, o que vai junto, cada defeito com foto',
+    'Anunciar no OLX e no Marketplace com o preço PIX na capa',
+    'Vender, entregar de dia, registrar a venda no app',
+    'Fechar o ciclo: R$/hora, dias em estoque, markup']}
+];
+
+/* ===================== store ===================== */
+var KEY='meubrick-v1';
+var KEY_ANTIGA='bancada-v2';
+var S = { deals:[], tarefas:{}, regua:{}, giro:{}, tema:null, chartMode:'lucro', insignias:[] };
+var db=null, saveT=null;
+
+function load(){
+  try{
+    var raw=localStorage.getItem(KEY);
+    if(!raw){ var antigo=localStorage.getItem(KEY_ANTIGA);
+      if(antigo){ raw=antigo; localStorage.setItem(KEY, antigo); } }
+    if(raw){ var o=JSON.parse(raw); if(o&&typeof o==='object'){
+    S.deals = Array.isArray(o.deals)?o.deals:[];
+    S.tarefas = o.tarefas||{}; S.regua=o.regua||{}; S.giro=o.giro||{};
+    S.tema=o.tema||null; S.chartMode=o.chartMode||'lucro';
+    S.insignias = Array.isArray(o.insignias)?o.insignias:[];
+  } } }catch(e){}
+}
+function save(){
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){
+    toast('Armazenamento cheio — exporte um backup'); }
+  clearTimeout(saveT);
+  saveT=setTimeout(function(){ if(db) db.doc('estado/app').set(S).catch(function(){}); }, 900);
+}
+
+/* ===================== cálculo de um negócio ===================== */
+function calc(d){
+  var c = canal(d.canal||'pix');
+  var venda = +d.venda||0, compra = +d.compra||0, ins = +d.insumos||0, hrs = +d.horas||0;
+  var devolvido = d.status === 'devolvido';
+  var vendido = !!(d.vendaData && venda>0) && !devolvido;
+  var taxa = vendido ? venda*c.p + (venda>0?c.f:0) : 0;
+  var liq  = venda - taxa;
+  var custo= compra + ins;
+  var lucro= vendido ? liq - custo : 0;
+  return {
+    vendido:vendido, devolvido:devolvido, taxa:taxa, liquido:liq, custo:custo, lucro:lucro,
+    markup: custo>0 && vendido ? lucro/custo : 0,
+    margem: venda>0 && vendido ? lucro/venda : 0,
+    dias: days(d.compraData, d.vendaData||null),
+    rph: hrs>0 && vendido ? lucro/hrs : 0
+  };
+}
+
+/* ===================== PAINEL ===================== */
+function renderPainel(){
+  var ds=S.deals, vend=[], est=[];
+  ds.forEach(function(d){ (calc(d).vendido?vend:est).push(d); });
+
+  var lucro=0, fat=0, custoV=0, dias=0, horas=0, retornos=0;
+  vend.forEach(function(d){ var k=calc(d);
+    lucro+=k.lucro; fat+=(+d.venda||0); custoV+=k.custo; dias+=k.dias; horas+=(+d.horas||0);
+    if(d.status==='devolvido') retornos++;
+  });
+  var parado=0; est.forEach(function(d){ parado+=calc(d).custo; });
+  var markup = custoV>0 ? lucro/custoV : 0;
+  var rph = horas>0 ? lucro/horas : 0;
+  var diasMed = vend.length ? dias/vend.length : 0;
+
+  /* mês corrente */
+  var mAtual = today().slice(0,7), lucroMes=0, fatMes=0;
+  vend.forEach(function(d){ if((d.vendaData||'').slice(0,7)===mAtual){ lucroMes+=calc(d).lucro; fatMes+=(+d.venda||0);} });
+
+  $('k-top').innerHTML =
+    cell(money(lucro),'Lucro acumulado','go','feat') +
+    cell(money(parado),'Capital parado', parado>lucro*2?'stop':'') +
+    cell(pc(markup),'Markup médio','');
+
+  var encalhados = est.filter(function(d){ return days(d.compraData,null) > 30; }).length;
+  $('k-saude').innerHTML =
+    cell(vend.length + ' / ' + est.length,'Vendidos / em estoque','') +
+    cell(diasMed?Math.round(diasMed)+' d':'—','Dias médios até vender', diasMed>30?'warn':'') +
+    cell(rph?money(rph):'—','Por hora de trabalho','') +
+    cell(money(lucroMes),'Lucro deste mês','') +
+    cell(money(fat),'Faturamento acumulado','') +
+    cell(encalhados?encalhados:'0','Encalhados há 30+ dias', encalhados?'stop':'');
+
+  /* categorias */
+  var tb=$('t-cat').querySelector('tbody'); tb.innerHTML='';
+  var byCat={};
+  vend.forEach(function(d){ var c=d.cat||'Outro'; byCat[c]=byCat[c]||{n:0,l:0,c:0};
+    var k=calc(d); byCat[c].n++; byCat[c].l+=k.lucro; byCat[c].c+=k.custo; });
+  var keys=Object.keys(byCat).sort(function(a,b){ return byCat[b].l-byCat[a].l; });
+  if(!keys.length){
+    tb.innerHTML='<tr><td style="color:var(--muted);font-size:13.5px">Sem vendas registradas ainda.</td></tr>';
+  } else {
+    keys.forEach(function(c){ var o=byCat[c];
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td><strong>'+esc(c)+'</strong><br><span style="font-size:11.5px;color:var(--muted)">'+o.n+' negócio'+(o.n>1?'s':'')+'</span></td>'+
+        '<td class="n"><strong>'+money(o.l)+'</strong><br><span style="font-size:11.5px;color:var(--muted)">markup '+pc(o.c>0?o.l/o.c:0)+'</span></td>';
+      tb.appendChild(tr);
+    });
+  }
+  renderChart(vend);
+}
+function cell(v,k,cls,extra){
+  return '<div class="'+(extra||'')+'"><span class="v '+(cls||'')+'">'+esc(v)+'</span><span class="k">'+esc(k)+'</span></div>';
+}
+
+/* ===================== gráfico mensal ===================== */
+function renderChart(vend){
+  var host=$('chart'); host.innerHTML='';
+  var mode=S.chartMode;
+  $('cm-lucro').setAttribute('aria-pressed', mode==='lucro');
+  $('cm-fat').setAttribute('aria-pressed', mode==='fat');
+  $('chart-title').textContent = mode==='lucro' ? 'Lucro por mês' : 'Faturamento por mês';
+  $('chart-sub').textContent = mode==='lucro'
+    ? 'O que sobrou depois de taxa, peça e custo'
+    : 'Quanto entrou, bruto, no mês da venda';
+
+  if(!vend.length){
+    host.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><path d="M4 19V10M10 19V5M16 19v-6M22 19H2"/></svg>'+
+      '<p>O gráfico aparece assim que você registrar a primeira venda.</p></div>';
+    return;
+  }
+
+  /* últimos 6 meses, incluindo os vazios */
+  var now=new Date(), meses=[];
+  for(var i=5;i>=0;i--){
+    var d=new Date(now.getFullYear(), now.getMonth()-i, 1);
+    meses.push(d.toISOString().slice(0,7));
+  }
+  var agg={}; meses.forEach(function(m){ agg[m]={lucro:0,fat:0,n:0}; });
+  vend.forEach(function(d){
+    var m=(d.vendaData||'').slice(0,7);
+    if(agg[m]){ var k=calc(d); agg[m].lucro+=k.lucro; agg[m].fat+=(+d.venda||0); agg[m].n++; }
+  });
+
+  var vals = meses.map(function(m){ return mode==='lucro'?agg[m].lucro:agg[m].fat; });
+  var max = Math.max.apply(null, vals.concat([1]));
+  var step = Math.pow(10, Math.floor(Math.log10(max)));
+  var top = Math.ceil(max/step)*step; if(top<=0) top=1;
+
+  var W=320, H=150, padL=6, padB=26, padT=10;
+  var plotH = H-padB-padT;
+  var n=meses.length, gap=6, bw=(W-padL*2-gap*(n-1))/n;
+
+  var svg='<svg viewBox="0 0 '+W+' '+H+'" role="img" aria-label="'+
+    ($('chart-title').textContent)+' nos últimos seis meses">';
+  /* grade recessiva: só a linha do topo e a base */
+  [0,0.5,1].forEach(function(f){
+    var y=padT+plotH*(1-f);
+    svg+='<line x1="'+padL+'" y1="'+y+'" x2="'+(W-padL)+'" y2="'+y+'" stroke="var(--line-2)" stroke-width="1"/>';
+  });
+  svg+='<text x="'+padL+'" y="'+(padT-2)+'" font-size="8" font-family="ui-monospace,monospace" fill="var(--muted)">'+
+       BRL.format(top).replace(/\s/g,' ')+'</text>';
+
+  meses.forEach(function(m,i){
+    var v = mode==='lucro'?agg[m].lucro:agg[m].fat;
+    var h = top>0 ? Math.max(v>0?3:0, plotH*(v/top)) : 0;
+    var x = padL + i*(bw+gap);
+    var y = padT + plotH - h;
+    var atual = (i===n-1);
+    if(h>0){
+      svg+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+h.toFixed(1)+
+           '" rx="4" fill="var(--go)" opacity="'+(atual?1:0.72)+'"/>';
+    }
+    svg+='<rect class="hit" data-i="'+i+'" x="'+x.toFixed(1)+'" y="'+padT+'" width="'+bw.toFixed(1)+
+         '" height="'+plotH+'" fill="transparent" style="cursor:pointer"/>';
+    svg+='<text x="'+(x+bw/2).toFixed(1)+'" y="'+(H-10)+'" font-size="9" text-anchor="middle" '+
+         'font-family="ui-monospace,monospace" fill="var(--muted)">'+mesLabel(m+'-01')+'</text>';
+  });
+  svg+='</svg>';
+  host.innerHTML=svg;
+
+  /* tooltip por barra */
+  var wrap=host.parentNode, tip=null;
+  host.querySelectorAll('.hit').forEach(function(r){
+    function show(e){
+      var i=+r.getAttribute('data-i'), m=meses[i], a=agg[m];
+      if(!tip){ tip=el('div','tip'); wrap.appendChild(tip); }
+      tip.innerHTML = mesLabel(m+'-01')+'<br>'+
+        'lucro '+money(a.lucro)+'<br>'+
+        'bruto '+money(a.fat)+'<br>'+
+        a.n+' negócio'+(a.n===1?'':'s');
+      var br=wrap.getBoundingClientRect(), rr=r.getBoundingClientRect();
+      var left = rr.left-br.left+rr.width/2;
+      tip.style.left = Math.max(4, Math.min(br.width-tip.offsetWidth-4, left-tip.offsetWidth/2))+'px';
+      tip.style.top = '2px';
+      if(e) e.preventDefault();
+    }
+    r.addEventListener('pointerenter', show);
+    r.addEventListener('pointerdown', show);
+    r.addEventListener('pointerleave', function(){ if(tip){ tip.remove(); tip=null; } });
+  });
+  wrap.addEventListener('pointerleave', function(){ if(tip){ tip.remove(); tip=null; } });
+}
+
+/* ===================== NEGÓCIOS ===================== */
+var filtro='todos';
+function renderDeals(){
+  var host=$('deals'); host.innerHTML='';
+  var list = S.deals.slice().sort(function(a,b){
+    var A=a.vendaData||a.compraData||'', B=b.vendaData||b.compraData||'';
+    return B.localeCompare(A);
+  });
+  list = list.filter(function(d){
+    var k=calc(d);
+    if(filtro==='estoque')  return !k.vendido;
+    if(filtro==='vendido')  return k.vendido;
+    if(filtro==='atrasado') return !k.vendido && days(d.compraData,null)>30;
+    return true;
+  });
+
+  if(!list.length){
+    host.innerHTML='<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/>'+
+      '<path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>'+
+      '<p>'+(S.deals.length? 'Nenhum negócio neste filtro.' :
+        'Nenhum negócio registrado. <span class="p-toque">Toque</span><span class="p-fino">Clique</span> no + para lançar a primeira compra — ou use a Régua e registre direto de lá.<span class="dica">Atalho: <kbd>N</kbd> lança um negócio, <kbd>T</kbd> abre a Régua.</span>')+'</p></div>';
+    return;
+  }
+
+  list.forEach(function(d){
+    var k=calc(d);
+    var c=el('div','deal');
+    var tags='';
+    if(k.vendido){
+      tags += '<span class="tag go">markup '+pc(k.markup)+'</span>';
+      tags += '<span class="tag">margem '+pc(k.margem)+'</span>';
+      tags += '<span class="tag'+(k.dias>30?' warn':'')+'">'+k.dias+' dias</span>';
+      if(k.rph>0) tags += '<span class="tag">'+money(k.rph)+'/h</span>';
+      if(k.taxa>0) tags += '<span class="tag">taxa '+BRL2.format(k.taxa)+'</span>';
+    } else {
+      var dd=days(d.compraData,null);
+      if(k.devolvido) tags += '<span class="tag stop">devolvido</span>';
+      tags += '<span class="tag'+(dd>30?' stop':(dd>14?' warn':''))+'">'+dd+' dias em estoque</span>';
+      tags += '<span class="tag">custo '+money(k.custo)+'</span>';
+    }
+    c.innerHTML =
+      '<div class="top"><div><div class="nm">'+esc(d.item||'Sem nome')+'</div>'+
+      '<div class="meta">'+esc(d.cat||'—')+(d.cidade?' · '+esc(d.cidade):'')+
+      ' · '+(d.compraData?d.compraData.slice(8,10)+'/'+d.compraData.slice(5,7):'—')+'</div></div>'+
+      '<div class="amt '+(k.vendido?'':'')+'" style="color:'+(k.vendido?(k.lucro>=0?'var(--go)':'var(--stop)'):'var(--ink)')+'">'+
+      (k.vendido?money(k.lucro):money(k.custo))+
+      '<small>'+(k.vendido?'lucro':'parado')+'</small></div></div>'+
+      '<div class="row">'+tags+'</div>'+
+      '<div class="acts">'+
+        (k.vendido?'<button data-act="edit">Editar</button><button data-act="del">Apagar</button>'
+                  :'<button data-act="sell" class="sell">Vendi</button><button data-act="edit">Editar</button>')+
+      '</div>';
+    c.querySelectorAll('[data-act]').forEach(function(b){
+      b.addEventListener('click', function(){
+        var a=b.getAttribute('data-act');
+        if(a==='edit') openDeal(d.id);
+        else if(a==='sell') openDeal(d.id, true);
+        else if(a==='del'){
+          if(confirm('Apagar "'+(d.item||'este negócio')+'"? Não dá para desfazer.')){
+            S.deals = S.deals.filter(function(x){ return x.id!==d.id; });
+            save(); renderAll(); toast('Negócio apagado');
+          }
+        }
+      });
+    });
+    host.appendChild(c);
+  });
+}
+
+/* ===================== sheet de negócio ===================== */
+function openDeal(id, vender, prefill){
+  var d = id ? S.deals.filter(function(x){return x.id===id;})[0] : null;
+  var novo = !d;
+  d = d || Object.assign({
+    id:'d'+Date.now()+Math.random().toString(36).slice(2,6),
+    item:'', cat:'Console', cidade:'', compraData:today(), compra:0,
+    insumos:0, horas:0, canal:'pix', status:'', vendaData:'', venda:0, obs:''
+  }, prefill||{});
+
+  var host=$('sheet-host');
+  var canaisOpt = CANAIS.map(function(c){
+    return '<option value="'+c.k+'"'+(d.canal===c.k?' selected':'')+'>'+esc(c.n)+'</option>'; }).join('');
+  var catsOpt = CATS.map(function(c){
+    return '<option value="'+c+'"'+(d.cat===c?' selected':'')+'>'+c+'</option>'; }).join('');
+
+  host.innerHTML =
+  '<div class="sheet" id="sheet"><div class="scrim" data-close></div><div class="body">'+
+    '<div class="grab"></div>'+
+    '<h3>'+(novo?'Novo negócio':(vender?'Registrar a venda':'Editar negócio'))+'</h3>'+
+    '<p class="lead">'+(vender?'O resto já está preenchido — só o que entrou.':'Deslocamento fica fora: você abate rodando Uber.')+'</p>'+
+
+    '<div class="fld"><label for="f-item">O que é</label>'+
+      '<input id="f-item" type="text" value="'+esc(d.item)+'" placeholder="PS4 Slim 1TB + 2 controles" autocomplete="off"></div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="f-cat">Categoria</label><select id="f-cat">'+catsOpt+'</select></div>'+
+      '<div class="fld"><label for="f-cidade">Cidade</label>'+
+        '<input id="f-cidade" type="text" value="'+esc(d.cidade)+'" placeholder="Campo Grande" autocomplete="off"></div>'+
+    '</div>'+
+
+    '<div class="sec" style="margin:6px 0 10px">Compra</div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="f-cdata">Data</label>'+
+        '<input id="f-cdata" type="date" value="'+esc(d.compraData)+'"></div>'+
+      '<div class="fld"><label for="f-compra">Quanto paguei</label>'+
+        '<input id="f-compra" type="number" inputmode="decimal" step="10" value="'+(+d.compra||'')+'" placeholder="0"></div>'+
+    '</div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="f-insumos">Peças e insumos</label>'+
+        '<input id="f-insumos" type="number" inputmode="decimal" step="5" value="'+(+d.insumos||'')+'" placeholder="0"></div>'+
+      '<div class="fld"><label for="f-horas">Horas gastas</label>'+
+        '<input id="f-horas" type="number" inputmode="decimal" step="0.5" value="'+(+d.horas||'')+'" placeholder="0"></div>'+
+    '</div>'+
+
+    '<div class="sec" style="margin:6px 0 10px">Venda <span style="text-transform:none;letter-spacing:0;font-family:var(--ui)">— deixe vazio se ainda está em estoque</span></div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="f-vdata">Data da venda</label>'+
+        '<input id="f-vdata" type="date" value="'+esc(vender && !d.vendaData ? today() : d.vendaData)+'"></div>'+
+      '<div class="fld"><label for="f-venda">Quanto vendi</label>'+
+        '<input id="f-venda" type="number" inputmode="decimal" step="10" value="'+(+d.venda||'')+'" placeholder="0"></div>'+
+    '</div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="f-canal">Como recebi</label><select id="f-canal">'+canaisOpt+'</select></div>'+
+      '<div class="fld"><label for="f-status">Situação</label><select id="f-status">'+
+        '<option value=""'+(!d.status?' selected':'')+'>Normal</option>'+
+        '<option value="devolvido"'+(d.status==='devolvido'?' selected':'')+'>Devolvido pelo comprador</option>'+
+      '</select></div>'+
+    '</div>'+
+    '<div class="fld"><label for="f-obs">Observações</label>'+
+      '<textarea id="f-obs" placeholder="Anúncio parado 3 semanas. Trocou pasta térmica.">'+esc(d.obs)+'</textarea></div>'+
+
+    '<div class="card flat" id="f-preview" style="padding:13px;margin-bottom:14px"></div>'+
+    '<div class="btnrow">'+
+      '<button class="btn btn-s" data-close>Cancelar</button>'+
+      '<button class="btn btn-p" id="f-save">Salvar</button>'+
+    '</div>'+
+  '</div></div>';
+
+  var sheet=$('sheet');
+  function read(){
+    return {
+      item:$('f-item').value.trim(), cat:$('f-cat').value, cidade:$('f-cidade').value.trim(),
+      compraData:$('f-cdata').value, compra:+$('f-compra').value||0,
+      insumos:+$('f-insumos').value||0, horas:+$('f-horas').value||0,
+      canal:$('f-canal').value, status:$('f-status').value,
+      vendaData:$('f-vdata').value, venda:+$('f-venda').value||0,
+      obs:$('f-obs').value.trim()
+    };
+  }
+  function preview(){
+    var k=calc(read()), p=$('f-preview');
+    if(k.devolvido){
+      p.innerHTML='<div style="font-size:13.5px;color:var(--stop)">Devolvido — o item volta para o estoque '+
+        'e a sequência da insígnia Ficha Limpa zera. Capital travado de novo: <strong class="mono">'+money(k.custo)+'</strong></div>';
+    } else if(!k.vendido){
+      p.innerHTML='<div style="font-size:13.5px;color:var(--muted)">Em estoque · capital travado <strong style="color:var(--ink)" class="mono">'+money(k.custo)+'</strong>'+
+        (read().compraData? ' · '+days(read().compraData,null)+' dias':'')+'</div>';
+    } else {
+      p.innerHTML='<div class="kpis" style="border:0"><div style="background:var(--card-2)"><span class="v '+(k.lucro>=0?'go':'stop')+'">'+money(k.lucro)+'</span><span class="k">lucro</span></div>'+
+        '<div style="background:var(--card-2)"><span class="v">'+pc(k.markup)+'</span><span class="k">markup</span></div>'+
+        '<div style="background:var(--card-2)"><span class="v">'+k.dias+' d</span><span class="k">em estoque</span></div>'+
+        '<div style="background:var(--card-2)"><span class="v">'+(k.rph?money(k.rph):'—')+'</span><span class="k">por hora</span></div></div>';
+    }
+  }
+  sheet.querySelectorAll('input,select,textarea').forEach(function(i){
+    i.addEventListener('input', preview); i.addEventListener('change', preview);
+  });
+  sheet.querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', function(){ host.innerHTML=''; });
+  });
+  $('f-save').addEventListener('click', function(){
+    var o=read();
+    if(!o.item){ toast('Dê um nome ao item'); $('f-item').focus(); return; }
+    if(!o.compraData){ toast('Falta a data da compra'); return; }
+    var antesIns = (S.insignias||[]).slice();
+    Object.assign(d, o);
+    if(novo) S.deals.push(d);
+    save(); host.innerHTML='';
+    toast(novo?'Negócio registrado':'Atualizado');
+    renderAll(false);
+    setTimeout(function(){
+      anunciar((S.insignias||[]).filter(function(id){ return antesIns.indexOf(id)<0; }));
+    }, 1200);
+  });
+  preview();
+  if(vender) setTimeout(function(){ $('f-venda').focus(); }, 260);
+  else if(novo) setTimeout(function(){ $('f-item').focus(); }, 260);
+}
+
+/* ===================== RÉGUA ===================== */
+var R = { venda:1350, margem:0.35, canal:'pix', insumo:30, pedido:950, defeito:'ok', vbase:null, plat:'*' };
+
+/* defeito que destroi valor de revenda (banido) derruba a venda, nao o insumo.
+   vbase guarda a venda cheia pra poder voltar. */
+function aplicaPerdaValor(){
+  var D = defeito(R.defeito);
+  if(D.v){
+    if(R.vbase==null) R.vbase = R.venda;
+    R.venda = Math.floor(R.vbase*D.v/10)*10;
+  } else if(R.vbase!=null){
+    R.venda = R.vbase; R.vbase = null;
+  }
+  $('r-venda').value = R.venda; $('r-venda-s').value = Math.min(5000, Math.max(100, R.venda));
+}
+
+/* So mostra os defeitos da plataforma escolhida no preset: misturar drift de
+   Joy-Con com YLOD de PS3 numa lista so nao ajuda ninguem na hora da compra. */
+function buildDefeitos(){
+  var df=$('defeitos');
+  var lista = DEFEITOS.filter(function(x){ return x.pl==='*' || x.pl===R.plat; });
+  var bloco = df.closest('.ctl');
+  if(lista.length<2){ if(bloco) bloco.hidden=true; return; }
+  if(bloco) bloco.hidden=false;
+  df.innerHTML='';
+  lista.forEach(function(x){
+    var b=el('button',null,x.n); b.type='button';
+    b.setAttribute('aria-pressed', R.defeito===x.k);
+    b.addEventListener('click', function(){
+      R.defeito=x.k; R.insumo=x.p; aplicaPerdaValor();
+      df.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      $('insumos').querySelectorAll('button').forEach(function(o,i){ o.setAttribute('aria-pressed', INSUMOS[i]===x.p); });
+      calcRegua(); persistRegua();
+    });
+    df.appendChild(b);
+  });
+}
+
+function buildReguaChips(){
+  var p=$('presets'); p.innerHTML='';
+  var fams=[], porFam={};
+  PRESETS.forEach(function(x){
+    var g=x.g||'Outros';
+    if(!porFam[g]){ porFam[g]=[]; fams.push(g); }
+    porFam[g].push(x);
+  });
+  function marcaPreset(nome){
+    p.querySelectorAll('button').forEach(function(o){
+      o.setAttribute('aria-pressed', o.dataset.preset===nome ? 'true' : 'false');
+    });
+  }
+  fams.forEach(function(g){
+    p.appendChild(el('div','fam',g));
+    var row=el('div','row');
+    porFam[g].forEach(function(x){
+      var b=el('button',null,x.s||x.n); b.type='button';
+      b.dataset.preset=x.n;
+      b.setAttribute('aria-label', x.n);
+      b.setAttribute('aria-pressed','false');
+      b.addEventListener('click', function(){
+        if((x.pl||'*')!==R.plat){ R.plat=x.pl||'*'; R.defeito='ok'; R.insumo=30; buildDefeitos(); }
+        R.vbase=null; R.venda=x.v; $('r-venda').value=x.v; $('r-venda-s').value=Math.min(5000,x.v);
+        aplicaPerdaValor();
+        if(R.pedido < x.v*0.45 || R.pedido > x.v*1.1){ R.pedido=Math.round(x.v*0.7/10)*10; $('r-pedido').value=R.pedido; }
+        marcaPreset(x.n);
+        calcRegua(); persistRegua();
+      });
+      row.appendChild(b);
+    });
+    p.appendChild(row);
+  });
+  var c=$('canais'); c.innerHTML='';
+  CANAIS.forEach(function(x){
+    var b=el('button',null,x.n); b.type='button';
+    b.setAttribute('aria-pressed', R.canal===x.k);
+    b.addEventListener('click', function(){
+      R.canal=x.k;
+      c.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      $('canal-hint').textContent = x.h;
+      calcRegua(); persistRegua();
+    });
+    c.appendChild(b);
+  });
+  buildDefeitos();
+
+  var ins=$('insumos'); ins.innerHTML='';
+  INSUMOS.forEach(function(v){
+    var b=el('button',null, v===0?'Nenhum':('R$ '+v)); b.type='button';
+    b.setAttribute('aria-pressed', R.insumo===v);
+    b.addEventListener('click', function(){
+      R.insumo=v; R.defeito='ok';
+      ins.querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      $('defeitos').querySelectorAll('button').forEach(function(o,i){ o.setAttribute('aria-pressed', i===0); });
+      calcRegua(); persistRegua();
+    });
+    ins.appendChild(b);
+  });
+  $('seg-margem').querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){
+      R.margem = (+b.getAttribute('data-m'))/100;
+      $('seg-margem').querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+      b.setAttribute('aria-pressed','true');
+      calcRegua(); persistRegua();
+    });
+  });
+}
+function persistRegua(){ S.regua = Object.assign({}, R); save(); }
+
+function calcRegua(){
+  var c=canal(R.canal);
+  var venda=R.venda, taxa = venda>0 ? venda*c.p + c.f : 0;
+  var liq = venda - taxa;
+  var alvo = venda*R.margem;
+  var teto = Math.max(0, liq - R.insumo - alvo);
+  var lucro = teto>0 ? liq - R.insumo - teto : 0;
+  var custo = teto + R.insumo;
+  var markup = custo>0 ? lucro/custo : 0;
+
+  $('lv-venda').textContent  = money(venda);
+  $('lv-margem').textContent = pc(R.margem);
+  $('lv-insumo').textContent = money(R.insumo);
+  var D = defeito(R.defeito);
+  $('lv-defeito').textContent = D.k==='ok' ? 'Nenhum' : ('−'+money(D.d));
+  $('defeito-hint').innerHTML = D.k==='ok'
+    ? 'Só para Nintendo Switch. Marque o que a vistoria achou — a peça entra no custo e você ganha o argumento do desconto.'
+    : esc(D.h)+'<br>'+(D.v
+      ? '<b>Não conta como conserto.</b> Só compre com desconto pesado, e escreva no recibo que o comprador foi avisado.'
+      : '<b>Argumente '+money(D.d)+' de desconto</b> — é o que uma assistência cobraria. A peça te custa '+money(D.p)
+        + (D.d>D.p ? ', então o conserto põe <b>'+money(D.d-D.p)+'</b> no seu bolso.' : '.'));
+  $('lv-pedido').textContent = money(R.pedido);
+
+  var big=$('r-teto');
+  big.textContent = money(teto);
+  big.className = 'big mono' + (teto<=0?' neg':'');
+  $('r-teto-sub').textContent = teto>0
+    ? 'para sobrar ' + money(lucro) + ' com margem de ' + pc(R.margem)
+    : 'com essa margem e esses custos não sobra teto';
+
+  /* régua visual */
+  var max = Math.max(venda, R.pedido, teto, 1)*1.05;
+  var pT = Math.min(100, teto/max*100);
+  var pA = Math.min(100, R.pedido/max*100);
+  var meio = Math.min(100, teto*1.18/max*100);
+  $('z-go').style.width = pT+'%';
+  $('z-warn').style.left = pT+'%'; $('z-warn').style.width = Math.max(0, meio-pT)+'%';
+  $('z-stop').style.left = meio+'%'; $('z-stop').style.width = Math.max(0, 100-meio)+'%';
+  $('pin-teto').style.left = 'calc('+pT+'% - 1.5px)';
+  $('pin-ask').style.left  = 'calc('+pA+'% - 1px)';
+  $('lg-teto').textContent = money(teto);
+  $('lg-ask').textContent  = money(R.pedido);
+
+  var pill=$('r-pill'), note=$('r-note'), tom, curto;
+  if(teto<=0){
+    tom='stop'; curto='NÃO HÁ NEGÓCIO';
+    pill.className='pill p-stop'; pill.innerHTML='<span class="dot"></span><span>NÃO HÁ NEGÓCIO</span>';
+    note.textContent='Reveja o preço de venda ou baixe a margem alvo. Do jeito que está, não existe preço de compra que funcione.';
+  } else if(R.pedido<=teto){
+    tom='go'; curto='PODE COMPRAR';
+    pill.className='pill p-go'; pill.innerHTML='<span class="dot"></span><span>PODE COMPRAR</span>';
+    note.textContent='Ele já pede abaixo do seu teto. Ofereça '+money(Math.round(R.pedido*0.85/10)*10)+' mesmo assim — a sobra é sua.';
+  } else if(R.pedido<=teto*1.18){
+    tom='warn'; curto='NEGOCIE';
+    pill.className='pill p-warn'; pill.innerHTML='<span class="dot"></span><span>NEGOCIE ATÉ '+money(teto)+'</span>';
+    note.textContent='Está '+money(R.pedido-teto)+' acima. Uma oferta firme resolve. Se ele não chegar nesse número, vá embora.';
+  } else {
+    tom='stop'; curto='VÁ EMBORA';
+    pill.className='pill p-stop'; pill.innerHTML='<span class="dot"></span><span>VÁ EMBORA</span>';
+    note.textContent=money(R.pedido-teto)+' acima do teto é distância que negociação não cobre. Guarde o contato e volte em três semanas.';
+  }
+
+  /* espelha o veredito na barra fixa do celular */
+  var tf=$('teto-fixo');
+  if(tf){
+    $('tf-teto').textContent = money(Math.max(0,teto));
+    var tp=$('tf-pill'); tp.textContent=curto;
+    tp.className='tf-pill'+(tom==='go'?'':' '+tom);
+    tf.className='teto-fixo'+(tf.classList.contains('on')?' on':'')+(tom==='go'?'':' '+tom);
+  }
+
+  $('r-kpis').innerHTML =
+    cell(BRL2.format(taxa),'Taxa do canal','') +
+    cell(money(liq),'Líquido no bolso','') +
+    cell(money(lucro),'Lucro no teto','go') +
+    cell(pc(markup),'Markup no teto','');
+}
+
+/* ===================== GIRO ===================== */
+var G = { capital:1000, ticket:700, lucro:450, ciclo:21, reserva:25 };
+function calcGiro(){
+  $('lv-cap').textContent    = money(G.capital);
+  $('lv-ticket').textContent = money(G.ticket);
+  $('lv-lucro').textContent  = money(G.lucro);
+  $('lv-ciclo').textContent  = G.ciclo + ' d';
+  $('lv-res').textContent    = G.reserva + '%';
+
+  var disp = G.capital*(1-G.reserva/100);
+  var unid = G.ticket>0 ? Math.floor(disp/G.ticket) : 0;
+  var giros = 30/G.ciclo;
+  var mes = unid*giros*G.lucro;
+  var roi = G.capital>0 ? mes/G.capital : 0;
+  var empregado = unid*G.ticket;
+  var ocioso = G.capital>0 ? Math.max(0, disp-empregado)/G.capital : 0;
+
+  $('g-mes').textContent = money(mes);
+  $('g-sub').textContent = unid + (unid===1?' unidade':' unidades') + ' girando ' +
+    giros.toFixed(1).replace('.',',') + '× por mês';
+
+  $('g-kpis').innerHTML =
+    cell(String(unid),'Unidades ao mesmo tempo','') +
+    cell(giros.toFixed(1).replace('.',','),'Giros por mês','') +
+    cell(pc(roi),'Retorno mensal sobre o capital','go') +
+    cell(pc(ocioso),'Capital ocioso', ocioso>0.25?'stop':'');
+
+  var d;
+  if(unid===0) d='Com essa reserva o capital não cobre nem uma unidade desse ticket. Baixe o ticket — controles e jogos giram em 7 a 15 dias e ensinam a mesma coisa por um décimo do risco.';
+  else if(ocioso>0.25) d='Sobram '+money(G.capital*ocioso)+' sem função: nem em item, nem em reserva. Esse dinheiro rende zero. Use num segundo item de ticket menor, com ciclo mais curto que o do console.';
+  else if(G.ciclo>30) d='Ciclo de '+G.ciclo+' dias te dá só '+giros.toFixed(1).replace('.',',')+' giro por mês. Cortar o ciclo pela metade vale mais que dobrar a margem.';
+  else if(unid===1) d='Uma unidade por vez significa que qualquer encalhe para a operação inteira. Reserve capital para um segundo item de ticket baixo.';
+  else d='Configuração saudável: '+unid+' unidades girando '+giros.toFixed(1).replace('.',',')+'× por mês com '+pc(ocioso)+' de capital ocioso. Registre cinco negócios reais e troque essas premissas pelos seus números.';
+  $('g-diag').textContent = d;
+}
+
+/* ===================== checklists ===================== */
+function renderChecks(){
+  var v=$('wk-vistoria');
+  var modo = S.vsModo==='sw' ? 'sw' : 'mesa';
+  var lista = modo==='sw' ? VISTORIA_SW : VISTORIA_MESA;
+  v.innerHTML='<div class="h"><span class="t">Teste, nesta ordem</span><span class="s">8 minutos</span></div>'+
+    '<div class="seg" style="grid-template-columns:1fr 1fr;margin-bottom:12px" id="vs-seg">'+
+      '<button type="button" data-vs="mesa" aria-pressed="'+(modo==='mesa')+'">Console de mesa</button>'+
+      '<button type="button" data-vs="sw" aria-pressed="'+(modo==='sw')+'">Nintendo Switch</button>'+
+    '</div><ul>'+
+    lista.map(function(t,i){
+      var id='vs-'+modo+'-'+i;
+      return '<li><label for="'+id+'"><input type="checkbox" id="'+id+'"'+(S.tarefas[id]?' checked':'')+'><span>'+esc(t)+'</span></label></li>';
+    }).join('')+'</ul>'+
+    '<div style="margin-top:10px"><button class="btn btn-s" id="vs-reset" style="min-height:42px;font-size:14px">Limpar para a próxima vistoria</button></div>';
+  v.querySelectorAll('[data-vs]').forEach(function(b){
+    b.addEventListener('click', function(){ S.vsModo=b.getAttribute('data-vs'); save(); renderChecks(); });
+  });
+  $('vs-reset').addEventListener('click', function(){
+    lista.forEach(function(_,i){ delete S.tarefas['vs-'+modo+'-'+i]; });
+    save(); renderChecks(); toast('Vistoria zerada');
+  });
+
+  var l=$('wk-largada');
+  l.innerHTML = LARGADA.map(function(w,wi){
+    return '<div class="wk"><div class="h"><span class="t">'+esc(w.t)+'</span><span class="s">'+esc(w.s)+'</span></div><ul>'+
+      w.i.map(function(t,ii){ var id='tk-'+wi+'-'+ii;
+        return '<li><label for="'+id+'"><input type="checkbox" id="'+id+'"'+(S.tarefas[id]?' checked':'')+'><span>'+esc(t)+'</span></label></li>';
+      }).join('')+'</ul></div>';
+  }).join('');
+  updProg();
+}
+function updProg(){
+  var all=document.querySelectorAll('#wk-largada input[type=checkbox]');
+  var done=0; all.forEach(function(c){ if(c.checked) done++; });
+  var p = all.length ? done/all.length*100 : 0;
+  $('prog-bar').style.width = p.toFixed(1)+'%';
+  $('prog-txt').textContent = done+' de '+all.length+' concluídos';
+}
+
+/* ===================== backup ===================== */
+function openData(){
+  var host=$('sheet-host');
+  var n=S.deals.length;
+  host.innerHTML =
+  '<div class="sheet" id="sheet"><div class="scrim" data-close></div><div class="body">'+
+    '<div class="grab"></div><h3>Dados e backup</h3>'+
+    '<p class="lead">Os '+n+' negócio'+(n===1?'':'s')+' ficam guardados neste aparelho. Exporte de vez em quando — é o seu seguro.</p>'+
+    '<div class="card flat" style="padding:14px;margin-bottom:14px">'+
+      '<div style="display:grid;gap:9px">'+
+        '<button class="btn btn-s" id="ex-json"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Baixar backup (.json)</button>'+
+        '<button class="btn btn-s" id="ex-csv"><svg viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg> Baixar planilha (.csv)</button>'+
+        '<label class="btn btn-s" for="im-file" style="margin:0"><svg viewBox="0 0 24 24"><path d="M12 15V3M7 8l5-5 5 5M5 21h14"/></svg> Restaurar backup</label>'+
+        '<input id="im-file" type="file" accept="application/json,.json" hidden>'+
+      '</div>'+
+    '</div>'+
+    '<p style="font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px">'+
+      'No iPhone, o arquivo vai para <strong>Arquivos › Downloads</strong>. Guarde no iCloud ou mande para você mesmo no WhatsApp uma vez por mês.</p>'+
+    '<button class="btn btn-d" id="wipe">Apagar tudo</button>'+
+    '<div style="height:10px"></div>'+
+    '<button class="btn btn-s" data-close>Fechar</button>'+
+  '</div></div>';
+
+  $('sheet').querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', function(){ host.innerHTML=''; });
+  });
+  $('ex-json').addEventListener('click', function(){
+    dl('meuflip-backup-'+today()+'.json', JSON.stringify(S,null,2), 'application/json');
+  });
+  $('ex-csv').addEventListener('click', function(){
+    var head=['item','categoria','cidade','data_compra','compra','insumos','horas','canal',
+              'data_venda','venda','taxa','liquido','custo','lucro','markup_pct','margem_pct',
+              'dias_estoque','reais_por_hora','obs'];
+    var rows=[head.join(';')];
+    S.deals.forEach(function(d){ var k=calc(d);
+      rows.push([d.item,d.cat,d.cidade,d.compraData,d.compra,d.insumos,d.horas,canal(d.canal).n,
+        d.vendaData,d.venda,k.taxa.toFixed(2),k.liquido.toFixed(2),k.custo.toFixed(2),
+        k.lucro.toFixed(2),(k.markup*100).toFixed(1),(k.margem*100).toFixed(1),
+        k.dias,k.rph.toFixed(2),(d.obs||'').replace(/[;\n\r]/g,' ')]
+        .map(function(c){ return String(c==null?'':c); }).join(';'));
+    });
+    dl('meuflip-negocios-'+today()+'.csv', '﻿'+rows.join('\n'), 'text/csv');
+  });
+  $('im-file').addEventListener('change', function(e){
+    var f=e.target.files && e.target.files[0]; if(!f) return;
+    var rd=new FileReader();
+    rd.onload=function(){
+      try{
+        var o=JSON.parse(rd.result);
+        if(!o || !Array.isArray(o.deals)) throw 0;
+        if(!confirm('Restaurar '+o.deals.length+' negócios? Isso substitui o que está aqui.')) return;
+        S.deals=o.deals; S.tarefas=o.tarefas||{}; S.regua=o.regua||{}; S.giro=o.giro||{};
+        save(); host.innerHTML=''; hydrate(); renderAll(); toast('Backup restaurado');
+      }catch(err){ toast('Arquivo inválido'); }
+    };
+    rd.readAsText(f);
+  });
+  $('wipe').addEventListener('click', function(){
+    if(!confirm('Apagar TODOS os negócios e marcações? Não dá para desfazer.')) return;
+    if(!confirm('Tem certeza mesmo? Exporte um backup antes.')) return;
+    S.deals=[]; S.tarefas={}; save(); host.innerHTML=''; renderAll(); toast('Tudo apagado');
+  });
+}
+function dl(name, text, type){
+  try{
+    var b=new Blob([text],{type:type+';charset=utf-8'});
+    var u=URL.createObjectURL(b);
+    var a=document.createElement('a'); a.href=u; a.download=name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ URL.revokeObjectURL(u); a.remove(); }, 800);
+    toast('Arquivo gerado');
+  }catch(e){ toast('Não consegui gerar o arquivo'); }
+}
+
+
+/* ===================== insígnias ===================== */
+var GL = {
+  bolt:'M13 2 L5 13h6l-1 9 8-12h-6z',
+  clock:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3.5 2',
+  coin:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM15 9.2a3 3 0 0 0-5.6 1.3c0 2.6 5.6.9 5.6 3.4A3 3 0 0 1 9 14.6M12 6.2v11.6',
+  shield:'M12 3l7 3v5c0 4.6-3 8.2-7 10-4-1.8-7-5.4-7-10V6z',
+  target:'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 13.2a1.2 1.2 0 1 0 0-2.4 1.2 1.2 0 0 0 0 2.4z',
+  pin:'M12 21.5S19 15 19 10a7 7 0 1 0-14 0c0 5 7 11.5 7 11.5zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+  layers:'M12 3l9 5-9 5-9-5zM3.6 12.4L12 17l8.4-4.6',
+  wrench:'M15.5 3a5.5 5.5 0 0 0-5 7.7L3 18.2V21h2.8l7.5-7.5A5.5 5.5 0 1 0 15.5 3z',
+  trophy:'M8 3h8v5a4 4 0 0 1-8 0zM8 5H5v1.5A3.5 3.5 0 0 0 8 10M16 5h3v1.5A3.5 3.5 0 0 1 16 10M12 12v4M9.5 20h5l-.5-4h-4z',
+  flame:'M12 21c3.9 0 6.2-2.6 6.2-5.7 0-4.1-3.2-5.6-3.2-9.3 0 0-2 2-3 4.1-1-1.5-1-3.1-1-3.1-2 1.6-5.2 4.1-5.2 8.3C5.8 18.4 8.1 21 12 21z',
+  check:'M4 12.6l5.2 5.2L20 6.4',
+  grid:'M4 4h6.5v6.5H4zM13.5 4H20v6.5h-6.5zM4 13.5h6.5V20H4zM13.5 13.5H20V20h-6.5z'
+};
+
+var BADGES = [
+ {g:'Largada', id:'primeiro', xp:20, n:'Primeiro Brick', gl:'bolt',
+  d:'Fechar o primeiro ciclo completo: comprar, recondicionar e vender.',
+  m:function(t){ return {a:t.vendidos, alvo:1}; }},
+ {g:'Largada', id:'bancada', xp:15, n:'Bancada Montada', gl:'layers',
+  d:'Três negócios registrados. A partir daqui os números começam a significar algo.',
+  m:function(t){ return {a:t.total, alvo:3}; }},
+ {g:'Largada', id:'ciclo', xp:25, n:'Ciclo Fechado', gl:'check',
+  d:'Uma venda em 15 dias ou menos, da compra ao PIX do comprador.',
+  m:function(t){ return {a:t.diasMin!=null&&t.diasMin<=15?1:0, alvo:1}; }},
+
+ {g:'Velocidade', id:'rapido', xp:35, n:'Giro Rápido', gl:'clock',
+  d:'Vender em até 7 dias. Capital de volta antes da semana virar.',
+  m:function(t){ return {a:t.diasMin!=null&&t.diasMin<=7?1:0, alvo:1}; }},
+ {g:'Velocidade', id:'relampago', xp:60, n:'Relâmpago', gl:'bolt',
+  d:'Vender em 48 horas. Anúncio bom encontrando comprador certo.',
+  m:function(t){ return {a:t.diasMin!=null&&t.diasMin<=2?1:0, alvo:1}; }},
+ {g:'Velocidade', id:'semencalhe', xp:70, n:'Sem Encalhe', gl:'shield',
+  d:'Cinco vendas seguidas sem nenhuma passar de 30 dias em estoque.',
+  m:function(t){ return {a:t.seqRapida, alvo:5}; }},
+
+ {g:'Margem', id:'ferro', xp:30, n:'Margem de Ferro', gl:'target',
+  d:'Um negócio com markup de 60% ou mais sobre o custo.',
+  m:function(t){ return {a:Math.round(t.markupMax*100), alvo:60, pct:true}; }},
+ {g:'Margem', id:'dobrou', xp:60, n:'Dobrou', gl:'coin',
+  d:'Markup de 100%: vender por duas vezes o que você colocou no item.',
+  m:function(t){ return {a:Math.round(t.markupMax*100), alvo:100, pct:true}; }},
+ {g:'Margem', id:'firme', xp:70, n:'Mão Firme', gl:'shield',
+  d:'Cinco vendas seguidas com markup acima de 50%. Teto respeitado.',
+  m:function(t){ return {a:t.seqMargem, alvo:5}; }},
+
+ {g:'Lucro', id:'mil', xp:30, n:'Primeiro Mil', gl:'coin',
+  d:'R$ 1.000 de lucro acumulado — já descontado taxa e peça.',
+  m:function(t){ return {a:Math.round(t.lucro), alvo:1000, brl:true}; }},
+ {g:'Lucro', id:'cinco', xp:70, n:'Cinco Mil', gl:'coin',
+  d:'R$ 5.000 de lucro acumulado.',
+  m:function(t){ return {a:Math.round(t.lucro), alvo:5000, brl:true}; }},
+ {g:'Lucro', id:'dez', xp:130, n:'Dez Mil', gl:'trophy',
+  d:'R$ 10.000 de lucro acumulado. Isso é um negócio, não mais um teste.',
+  m:function(t){ return {a:Math.round(t.lucro), alvo:10000, brl:true}; }},
+
+ {g:'Ofício', id:'tecnico', xp:40, n:'Técnico', gl:'wrench',
+  d:'Três negócios em que você colocou peça ou insumo — consertou, não só limpou.',
+  m:function(t){ return {a:t.comInsumo, alvo:3}; }},
+ {g:'Ofício', id:'hora', xp:35, n:'Hora Valorizada', gl:'clock',
+  d:'Um negócio pagando R$ 100 por hora ou mais de trabalho real.',
+  m:function(t){ return {a:Math.round(t.rphMax), alvo:100, brl:true}; }},
+ {g:'Ofício', id:'limpo', xp:80, n:'Ficha Limpa', gl:'check',
+  d:'Dez vendas sem uma única devolução. Defeito declarado no anúncio.',
+  m:function(t){ return {a:t.seqLimpa, alvo:10}; }},
+
+ {g:'Alcance', id:'cacador', xp:35, n:'Caçador', gl:'pin',
+  d:'Negócios em três cidades diferentes. A malha do interior funcionando.',
+  m:function(t){ return {a:t.cidades, alvo:3}; }},
+ {g:'Alcance', id:'catalogo', xp:40, n:'Catálogo', gl:'grid',
+  d:'Vendas em quatro categorias: console, controle, jogo, acessório ou lote.',
+  m:function(t){ return {a:t.cats, alvo:4}; }},
+ {g:'Alcance', id:'constante', xp:75, n:'Constante', gl:'flame',
+  d:'Vendas em três meses seguidos. Consistência vale mais que um mês bom.',
+  m:function(t){ return {a:t.mesesSeq, alvo:3}; }}
+];
+
+function stats(){
+  var vend=[], est=[];
+  S.deals.forEach(function(d){ (calc(d).vendido?vend:est).push(d); });
+  var t = { total:S.deals.length, vendidos:vend.length, lucro:0, custoV:0,
+            diasMin:null, markupMax:0, rphMax:0, comInsumo:0, devolvidos:0,
+            cidades:0, cats:0, mesesSeq:0, seqRapida:0, seqMargem:0, seqLimpa:0,
+            emEstoque:est.length, parado:0, encalhados:0, quaseLa:0, ultimaVenda:null,
+            xpInsignias:0, xpTotal:0 };
+  var cid={}, cat={};
+  vend.sort(function(a,b){ return (a.vendaData||'').localeCompare(b.vendaData||''); });
+  var r1=0, r2=0;
+  /* sequência limpa: caminha na linha do tempo e zera a cada devolução */
+  var linha = S.deals.filter(function(d){ return d.vendaData; })
+    .sort(function(a,b){ return a.vendaData.localeCompare(b.vendaData); });
+  var lim=0;
+  linha.forEach(function(d){
+    if(d.status==='devolvido'){ t.devolvidos++; lim=0; }
+    else if(calc(d).vendido){ lim++; if(lim>t.seqLimpa) t.seqLimpa=lim; }
+  });
+  vend.forEach(function(d){
+    var k=calc(d);
+    t.lucro+=k.lucro; t.custoV+=k.custo;
+    if(t.diasMin===null || k.dias<t.diasMin) t.diasMin=k.dias;
+    if(k.markup>t.markupMax) t.markupMax=k.markup;
+    if(k.rph>t.rphMax) t.rphMax=k.rph;
+    if((+d.insumos||0)>0) t.comInsumo++;
+    if(d.cidade) cid[d.cidade.trim().toLowerCase()]=1;
+    if(d.cat) cat[d.cat]=1;
+    r1 = k.dias<=30 ? r1+1 : 0; if(r1>t.seqRapida) t.seqRapida=r1;
+    r2 = k.markup>=0.5 ? r2+1 : 0; if(r2>t.seqMargem) t.seqMargem=r2;
+    if(!t.ultimaVenda || d.vendaData>t.ultimaVenda) t.ultimaVenda=d.vendaData;
+  });
+  est.forEach(function(d){
+    var k=calc(d), dd=days(d.compraData,null);
+    t.parado+=k.custo;
+    if(dd>30) t.encalhados++; else if(dd>=14) t.quaseLa++;
+    if(d.cidade) cid[d.cidade.trim().toLowerCase()]=1;
+  });
+  t.cidades=Object.keys(cid).length; t.cats=Object.keys(cat).length;
+
+  var ms=[]; vend.forEach(function(d){ var m=(d.vendaData||'').slice(0,7);
+    if(m && ms.indexOf(m)<0) ms.push(m); });
+  ms.sort();
+  var seq=ms.length?1:0, best=seq;
+  for(var i=1;i<ms.length;i++){
+    var a=ms[i-1].split('-'), b=ms[i].split('-');
+    var dif=(b[0]-a[0])*12 + (b[1]-a[1]);
+    if(dif===1){ seq++; if(seq>best) best=seq; } else seq=1;
+  }
+  t.mesesSeq=best;
+  return t;
+}
+
+function prog(b,t){ var r=b.m(t); var feito=r.a>=r.alvo;
+  return {feito:feito, a:r.a, alvo:r.alvo, pct:Math.max(0,Math.min(1, r.alvo? r.a/r.alvo:0)),
+          brl:!!r.brl, pctFmt:!!r.pct}; }
+
+function fmtProg(pr){
+  if(pr.brl) return money(pr.a) + ' / ' + money(pr.alvo);
+  if(pr.pctFmt) return pr.a + '% / ' + pr.alvo + '%';
+  return pr.a + ' / ' + pr.alvo;
+}
+
+var NIVEIS=[[0,'Aprendiz'],[100,'Garimpeiro'],[300,'Negociante'],[700,'Flipper'],[1200,'Mestre da Bancada']];
+var XP_VENDA=10, XP_POR_REAL=100;
+function nivel(t, xpIns){
+  var xp = t.vendidos*XP_VENDA + xpIns + Math.floor(Math.max(0,t.lucro)/XP_POR_REAL);
+  var i=0; for(var k=0;k<NIVEIS.length;k++) if(xp>=NIVEIS[k][0]) i=k;
+  var at=NIVEIS[i], px=NIVEIS[i+1]||null;
+  return { xp:xp, nome:at[1], prox:px?px[1]:null, faltam:px?px[0]-xp:0,
+           pct: px ? (xp-at[0])/(px[0]-at[0]) : 1 };
+}
+
+function bdgHTML(b, pr){
+  var fill = pr.feito ? 'var(--go)' : 'var(--card-2)';
+  var stroke = pr.feito ? 'var(--go)' : 'var(--line)';
+  return '<div class="bdg'+(pr.feito?' on':'')+'">'+
+    '<div class="hex"><svg class="bg" viewBox="0 0 40 40" aria-hidden="true">'+
+      '<path d="M20 2.2 34.5 10.6v16.8L20 35.8 5.5 27.4V10.6z" fill="'+fill+'" stroke="'+stroke+'" stroke-width="1.4"/></svg>'+
+      '<svg class="gl" viewBox="0 0 24 24" aria-hidden="true"><path d="'+GL[b.gl]+'"/></svg></div>'+
+    '<div class="bdg-h"><b>'+esc(b.n)+'</b><span class="bdg-xp'+(pr.feito?' on':'')+'">+'+b.xp+'</span></div>'+
+    '<p>'+esc(b.d)+'</p>'+
+    (pr.feito ? '<div class="pv" style="color:var(--go)">conquistada</div>'
+              : '<div class="pr"><i style="width:'+(pr.pct*100).toFixed(0)+'%"></i></div>'+
+                '<div class="pv">'+fmtProg(pr)+'</div>')+
+  '</div>';
+}
+
+function anunciar(ids){
+  if(!ids || !ids.length) return;
+  var bn = BADGES.filter(function(b){ return b.id===ids[0]; })[0] || {};
+  var soma = 0; ids.forEach(function(id){
+    var x=BADGES.filter(function(b){ return b.id===id; })[0]; if(x) soma+=x.xp; });
+  toast(ids.length===1 ? 'Insígnia: ' + (bn.n||'') + '  +' + (bn.xp||0) + ' XP'
+                       : ids.length + ' insígnias novas  +' + soma + ' XP');
+}
+
+function checkBadges(t, avisar){
+  var ganhas = [];
+  t.xpInsignias = 0; t.xpTotal = 0;
+  BADGES.forEach(function(b){
+    t.xpTotal += b.xp;
+    if(prog(b,t).feito){ ganhas.push(b.id); t.xpInsignias += b.xp; }
+  });
+  var antes = S.insignias || [];
+  var novas = ganhas.filter(function(id){ return antes.indexOf(id)<0; });
+  if(novas.length && avisar && antes.length + novas.length === ganhas.length){
+    anunciar(novas);
+  }
+  var mudou = ganhas.length !== antes.length ||
+              ganhas.some(function(id,i){ return antes[i] !== id; });
+  S.insignias = ganhas;
+  if(mudou) save();          /* persiste o conjunto recalculado */
+  return ganhas;
+}
+
+/* ===================== início ===================== */
+function saudacao(){
+  var h = new Date().getHours();
+  if(h<5)  return ['Boa madrugada', 'Plantão ou insônia — de qualquer jeito, é hora de varrer anúncio no celular.'];
+  if(h<12) return ['Bom dia',       'Manhã é a melhor janela para buscar e para entregar. Quem responde cedo fecha primeiro.'];
+  if(h<18) return ['Boa tarde',     'Tarde rende para negociar e rodar. Deixe a bancada e as fotos para a noite.'];
+  return ['Boa noite',              'Hora de limpar, fotografar e deixar o anúncio pronto para amanhecer no ar.'];
+}
+
+function renderInicio(t, xpIns){
+  var sa = saudacao();
+  $('gr-ola').textContent = sa[0] + ', Jean';
+  $('gr-sub').textContent = sa[1];
+
+  var nv = nivel(t, xpIns);
+  $('lvl-nome').textContent = nv.nome;
+  $('lvl-xp').textContent = nv.xp + ' XP';
+  $('lvl-next').innerHTML = nv.prox
+    ? 'faltam ' + nv.faltam + ' XP<br>para ' + esc(nv.prox)
+    : 'nível máximo';
+  $('lvl-fill').style.width = (nv.pct*100).toFixed(1) + '%';
+
+  /* cartões de atenção — no máximo dois */
+  var cards = [];
+  if(!t.total){
+    cards.push(['go','bolt','Comece pelo começo',
+      'Registre a primeira compra. Sem dado, nenhuma métrica aqui significa nada.','negocios']);
+  } else {
+    if(t.encalhados) cards.push(['stop','clock',
+      t.encalhados + (t.encalhados===1?' item encalhado':' itens encalhados'),
+      'Passou de 30 dias parado. Refaça o anúncio do zero; se não mover, corte 10%.','atrasado']);
+    if(t.quaseLa && cards.length<2) cards.push(['warn','clock',
+      t.quaseLa + (t.quaseLa===1?' item chegando na meta':' itens chegando na meta'),
+      'Entre 14 e 30 dias em estoque. Relance o anúncio antes de virar encalhe.','estoque']);
+    if(!t.emEstoque && cards.length<2) cards.push(['go','target','Estoque zerado',
+      'Capital livre é capital ocioso. Abra o OLX e filtre por anúncio parado há duas semanas.','regua']);
+    if(t.ultimaVenda && cards.length<2){
+      var dv = days(t.ultimaVenda, null);
+      if(dv>21) cards.push(['warn','flame','Sem vender há ' + dv + ' dias',
+        'O ciclo esfriou. Revise preço dos itens em estoque antes de comprar mais.','estoque']);
+    }
+  }
+  $('atencao').innerHTML = cards.slice(0,2).map(function(c){
+    return '<button class="alert '+c[0]+'" data-ir="'+c[4]+'">'+
+      '<svg class="ic" viewBox="0 0 24 24"><path d="'+GL[c[1]]+'"/></svg>'+
+      '<div><b>'+esc(c[2])+'</b><span>'+esc(c[3])+'</span></div>'+
+      '<svg class="go-ic" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg></button>';
+  }).join('');
+  $('atencao').querySelectorAll('[data-ir]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var d=b.getAttribute('data-ir');
+      if(d==='regua'){ go('regua'); return; }
+      go('negocios');
+      if(d==='atrasado'||d==='estoque'){
+        var alvo=$('filters').querySelector('[data-f="'+d+'"]');
+        if(alvo) alvo.click();
+      }
+    });
+  });
+
+  /* três próximas insígnias, as mais perto de destravar */
+  var falt = BADGES.map(function(b){ return {b:b, p:prog(b,t)}; })
+                   .filter(function(x){ return !x.p.feito; })
+                   .sort(function(a,b){ return b.p.pct - a.p.pct; })
+                   .slice(0,3);
+  $('bdg-prox').innerHTML = falt.length
+    ? falt.map(function(x){ return bdgHTML(x.b, x.p); }).join('')
+    : '<div class="bdg on" style="flex:1"><b>Todas conquistadas</b>'+
+      '<p>As 18 insígnias estão no bolso. O próximo nível é escala, não medalha.</p></div>';
+}
+
+function renderConquistas(t){
+  var feitas = 0;
+  var grupos = {};
+  BADGES.forEach(function(b){
+    var pr = prog(b,t); if(pr.feito) feitas++;
+    (grupos[b.g] = grupos[b.g] || []).push(bdgHTML(b, pr));
+  });
+  $('cq-count').textContent = feitas + ' / ' + BADGES.length;
+  $('cq-fill').style.width = (t.xpTotal ? t.xpInsignias/t.xpTotal*100 : 0).toFixed(1) + '%';
+  var sub = $('cq-sub');
+  if(sub) sub.innerHTML = 'insígnias conquistadas &nbsp;·&nbsp; <b class="mono" style="color:var(--go)">' +
+    t.xpInsignias + ' de ' + t.xpTotal + ' XP</b>';
+  $('bdg-grupos').innerHTML = Object.keys(grupos).map(function(g){
+    return '<div class="bdg-group"><div class="sec">'+esc(g)+'</div>'+
+           '<div class="bdg-grid">'+grupos[g].join('')+'</div></div>';
+  }).join('');
+}
+
+/* ===================== navegação ===================== */
+var VIEWS = {
+  inicio:{t:'MeuFLIP', s:'compra e venda de console'},
+  negocios:{t:'Negócios', s:'compras, vendas e markup'},
+  regua:{t:'Régua', s:'quanto pagar hoje'},
+  conquistas:{t:'Insígnias', s:'o que o método premia'},
+  manual:{t:'Manual', s:'método, métricas e foto'}
+};
+function go(v){
+  Object.keys(VIEWS).forEach(function(k){ $('v-'+k).hidden = (k!==v); });
+  document.querySelectorAll('.tabs button').forEach(function(b){
+    b.setAttribute('aria-selected', b.getAttribute('data-v')===v);
+  });
+  $('bar-title').textContent = VIEWS[v].t;
+  $('bar-sub').textContent = VIEWS[v].s;
+  $('fab').hidden = (v!=='negocios');
+  window.scrollTo(0,0);
+  if(window.tetoFixoOff) window.tetoFixoOff();
+  try{ history.replaceState(null,'','#'+v); }catch(e){}
+}
+
+/* ===================== tema ===================== */
+function applyTheme(){
+  if(S.tema) document.documentElement.setAttribute('data-theme', S.tema);
+  else document.documentElement.removeAttribute('data-theme');
+}
+
+/* ===================== boot ===================== */
+function hydrate(){
+  R = Object.assign(R, S.regua||{});
+  G = Object.assign(G, S.giro||{});
+  $('r-venda').value = R.venda; $('r-venda-s').value = Math.min(5000, R.venda);
+  $('r-pedido').value = R.pedido;
+  $('seg-margem').querySelectorAll('button').forEach(function(b){
+    b.setAttribute('aria-pressed', (+b.getAttribute('data-m'))/100 === R.margem);
+  });
+  ['capital','ticket','lucro','ciclo','reserva'].forEach(function(k){ $('g-'+k).value = G[k]; });
+  $('canal-hint').textContent = canal(R.canal).h;
+}
+function renderAll(avisar){
+  var t = stats();
+  checkBadges(t, avisar);
+  renderInicio(t, t.xpInsignias);
+  renderConquistas(t);
+  renderPainel();
+  renderDeals();
+  calcRegua();
+  calcGiro();
+}
+
+load();
+applyTheme();
+hydrate();
+buildReguaChips();
+renderChecks();
+renderAll();
+
+/* Barra fixa do teto: aparece quando o card grande sai da tela e some
+   quando ele volta ou quando voce troca de aba. */
+(function(){
+  var hero=document.querySelector('#v-regua > .hero'), tf=$('teto-fixo');
+  if(!hero || !tf || !('IntersectionObserver' in window)) return;
+  var io=new IntersectionObserver(function(es){
+    var visivel = es[0].isIntersecting;
+    var naRegua = !document.getElementById('v-regua').hidden;
+    tf.classList.toggle('on', !visivel && naRegua);
+  }, {rootMargin:'-64px 0px 0px 0px', threshold:0});
+  io.observe(hero);
+  window.tetoFixoOff=function(){ tf.classList.remove('on'); };
+})();
+
+/* tabs */
+document.querySelectorAll('.tabs button').forEach(function(b){
+  b.addEventListener('click', function(){ go(b.getAttribute('data-v')); });
+});
+var hash=(location.hash||'').replace('#','');
+go(VIEWS[hash]?hash:'inicio');
+
+/* régua: steppers + slider */
+document.querySelectorAll('[data-step]').forEach(function(b){
+  b.addEventListener('click', function(){
+    var t=$(b.getAttribute('data-step')), d=+b.getAttribute('data-d');
+    t.value = Math.max(0, (+t.value||0) + d);
+    t.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+});
+$('r-venda').addEventListener('input', function(){
+  R.venda = Math.max(0, +this.value||0);
+  if(R.vbase!=null) R.vbase = R.venda;
+  $('r-venda-s').value = Math.min(5000, Math.max(100, R.venda));
+  calcRegua(); persistRegua();
+});
+$('r-venda-s').addEventListener('input', function(){
+  R.venda = +this.value; if(R.vbase!=null) R.vbase = R.venda;
+  $('r-venda').value = R.venda; calcRegua(); persistRegua();
+});
+$('r-pedido').addEventListener('input', function(){
+  R.pedido = Math.max(0, +this.value||0); calcRegua(); persistRegua();
+});
+$('r-registrar').addEventListener('click', function(){
+  var c=canal(R.canal);
+  var teto = Math.max(0, R.venda - (R.venda*c.p + c.f) - R.insumo - R.venda*R.margem);
+  openDeal(null, false, {
+    compra: Math.min(R.pedido>0?R.pedido:teto, teto>0?teto:R.pedido),
+    insumos: R.insumo, canal: R.canal, cat:'Console',
+    item: R.defeito!=='ok' ? ('Switch — '+defeito(R.defeito).n) : ''
+  });
+});
+
+/* giro sliders */
+['capital','ticket','lucro','ciclo','reserva'].forEach(function(k){
+  $('g-'+k).addEventListener('input', function(){
+    G[k] = +this.value; calcGiro(); S.giro=Object.assign({},G); save();
+  });
+});
+
+/* filtros */
+$('filters').querySelectorAll('button').forEach(function(b){
+  b.addEventListener('click', function(){
+    filtro=b.getAttribute('data-f');
+    $('filters').querySelectorAll('button').forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+    b.setAttribute('aria-pressed','true');
+    renderDeals();
+  });
+});
+
+/* gráfico: modo */
+$('cm-lucro').addEventListener('click', function(){ S.chartMode='lucro'; save(); renderPainel(); });
+$('cm-fat').addEventListener('click',   function(){ S.chartMode='fat';   save(); renderPainel(); });
+
+/* checkboxes */
+document.addEventListener('change', function(e){
+  var t=e.target;
+  if(t && t.matches && t.matches('.wk input[type=checkbox]')){
+    S.tarefas[t.id]=t.checked; save(); updProg();
+  }
+});
+
+$('fab').addEventListener('click', function(){ openDeal(null); });
+$('q-regua').addEventListener('click', function(){ go('regua'); });
+$('q-novo').addEventListener('click', function(){ openDeal(null); });
+$('ver-todas').addEventListener('click', function(){ go('conquistas'); });
+$('btn-data').addEventListener('click', openData);
+$('btn-theme').addEventListener('click', function(){
+  var cur = document.documentElement.getAttribute('data-theme');
+  var sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+  S.tema = cur ? (cur==='dark'?'light':null) : (sysDark?'light':'dark');
+  applyTheme(); save();
+});
+
+
+/* ===================== teclado (desktop) ===================== */
+var ORDEM = ['inicio','negocios','regua','conquistas','manual'];
+document.addEventListener('keydown', function(e){
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
+  if(e.key==='Escape'){
+    var h=$('sheet-host'); if(h && h.innerHTML){ h.innerHTML=''; e.preventDefault(); }
+    return;
+  }
+  var a=e.target;
+  if(a && (a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT'||a.isContentEditable)) return;
+  if(e.key>='1' && e.key<='5'){ go(ORDEM[+e.key-1]); e.preventDefault(); return; }
+  if(e.key==='n'||e.key==='N'){ openDeal(null); e.preventDefault(); return; }
+  if(e.key==='t'||e.key==='T'){ go('regua'); e.preventDefault(); }
+});
+
+/* nuvem opcional (quando rodando como Artifact) */
+if(window.claude && typeof window.claude.use==='function'){
+  window.claude.use('db').then(function(d){
+    if(!d) return; db=d;
+    return db.doc('estado/app').get().then(function(s){
+      if(s && s.exists){
+        var o=s.data();
+        if(o && Array.isArray(o.deals) && o.deals.length >= S.deals.length){
+          S.deals=o.deals; S.tarefas=o.tarefas||S.tarefas;
+          S.regua=o.regua||S.regua; S.giro=o.giro||S.giro;
+          try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+          hydrate(); renderAll();
+        }
+      }
+    });
+  }).catch(function(){});
+}
+
+/* service worker */
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){});
+  });
+}
+})();
+</script>
+</body>
+</html>
