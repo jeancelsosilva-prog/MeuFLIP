@@ -128,6 +128,7 @@ p{margin:0 0 .85em}
 .appbar .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em;
   text-transform:uppercase;color:var(--chrome-muted);margin-top:1px}
 .appbar .spacer{flex:1}
+.iconbtn[aria-pressed="true"]{background:rgba(111,182,247,.18);color:#6FB6F7}
 .iconbtn{
   width:38px;height:38px;border-radius:10px;display:grid;place-items:center;
   color:var(--chrome-muted);
@@ -805,6 +806,119 @@ figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
 .abc.a li .v3{color:var(--go)}
 .abc li.kill .n3,.abc li.kill .v3{color:var(--stop)}
 .abc li .star{color:var(--go);font-weight:700}
+/* ==================================================================
+   CRM — funil de vendedores e compradores
+   ================================================================== */
+#v-crm .voltar{display:inline-flex;align-items:center;gap:7px;background:none;border:0;
+  color:var(--go);font-size:14px;font-weight:600;padding:6px 0;margin-bottom:6px;min-height:40px}
+#v-crm .voltar svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2.2;
+  stroke-linecap:round;stroke-linejoin:round}
+
+.crm-nav{display:flex;gap:7px;margin-bottom:14px}
+.crm-nav button{flex:1;border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm);
+  padding:10px 6px;font-size:13px;font-weight:600;color:var(--muted);min-height:44px;
+  letter-spacing:-.01em}
+.crm-nav button[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:var(--on-go)}
+.crm-nav .n{font-family:var(--mono);font-size:10.5px;opacity:.75;margin-left:4px}
+
+/* barra de capital */
+.cap{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 15px;box-shadow:var(--sh);margin-bottom:14px}
+.cap-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:9px}
+.cap-top label{font-size:12px;color:var(--muted)}
+.cap-top input{width:104px;text-align:right;font-family:var(--mono);font-size:15px;font-weight:600;
+  border:1px solid var(--line);border-radius:8px;padding:6px 9px;background:var(--card-2);
+  color:var(--ink);min-height:38px}
+.cap-g{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--line);
+  border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--line)}
+.cap-g > div{background:var(--card);padding:10px 11px}
+.cap-g .v{font-family:var(--mono);font-size:16px;font-weight:600;letter-spacing:-.02em;display:block}
+.cap-g .k{font-size:10.5px;color:var(--muted);margin-top:2px;display:block;line-height:1.3}
+.cap-g .v.g{color:var(--go)} .cap-g .v.w{color:var(--warn)} .cap-g .v.r{color:var(--stop)}
+
+/* cartão do prospect */
+.pro{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  box-shadow:var(--sh);padding:13px 14px;margin-bottom:10px;position:relative}
+.pro.fechei{border-color:color-mix(in srgb, var(--go) 45%, var(--line))}
+.pro.perdi{opacity:.55}
+.pro-h{display:flex;align-items:flex-start;gap:10px;margin-bottom:7px}
+.pro-r{font-family:var(--mono);font-size:11px;font-weight:700;width:24px;height:24px;
+  border-radius:7px;background:var(--card-2);color:var(--muted);display:grid;place-items:center;
+  flex:0 0 auto;margin-top:1px}
+.pro.fechei .pro-r{background:var(--go-bg);color:var(--go)}
+.pro-n{font-size:15px;font-weight:660;letter-spacing:-.015em;line-height:1.25}
+.pro-l{font-size:11.5px;color:var(--muted);margin-top:2px;line-height:1.35}
+.pro-x{margin-left:auto;background:none;border:0;color:var(--muted);padding:4px;
+  min-height:32px;min-width:32px;border-radius:7px;flex:0 0 auto}
+.pro-x svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;
+  stroke-linecap:round;display:block}
+.pro-nums{display:flex;gap:16px;margin:9px 0 10px;flex-wrap:wrap}
+.pro-nums > div{min-width:0}
+.pro-nums .v{font-family:var(--mono);font-size:15px;font-weight:600;letter-spacing:-.02em;display:block}
+.pro-nums .v.g{color:var(--go)} .pro-nums .v.r{color:var(--stop)}
+.pro-nums .k{font-size:10px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase;
+  font-family:var(--mono);display:block;margin-top:1px}
+.pro-note{font-size:12.5px;color:var(--ink-2);line-height:1.45;margin:0 0 10px}
+
+/* funil */
+.fun{display:flex;gap:4px;flex-wrap:wrap}
+.fun button{flex:1 1 auto;border:1px solid var(--line);background:var(--card-2);
+  border-radius:7px;padding:6px 4px;font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:.03em;color:var(--muted);min-height:34px;white-space:nowrap}
+.fun button.on{background:var(--go);border-color:var(--go);color:var(--on-go)}
+.fun button.on.w{background:var(--warn);border-color:var(--warn);color:var(--on-warn)}
+.fun button.on.r{background:var(--stop);border-color:var(--stop);color:#fff}
+
+/* mensagens */
+.msg{background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:13px 14px;margin-bottom:10px;box-shadow:var(--sh)}
+.msg h4{font-size:14px;font-weight:650;letter-spacing:-.01em;margin:0 0 3px}
+.msg .quando{font-size:11.5px;color:var(--muted);margin:0 0 9px;line-height:1.4}
+.msg q{display:block;font-size:13.5px;line-height:1.55;color:var(--ink-2);
+  background:var(--card-2);border-radius:var(--r-sm);padding:11px 12px;quotes:none}
+.msg .copiar{margin-top:9px;width:100%;border:1px solid var(--line);background:var(--card);
+  border-radius:var(--r-sm);padding:9px;font-size:13px;font-weight:600;color:var(--go);min-height:42px}
+.msg .copiar.ok{background:var(--go-bg);border-color:transparent}
+.msg .vars{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-top:7px;
+  line-height:1.5;word-break:break-word}
+
+/* importar do ChatGPT */
+.imp{background:var(--card);border:1px dashed var(--line);border-radius:var(--r);
+  padding:14px 15px;margin-bottom:14px}
+.imp h4{font-size:14.5px;font-weight:650;margin:0 0 4px;letter-spacing:-.01em}
+.imp p{font-size:12.5px;color:var(--muted);margin:0 0 11px;line-height:1.45}
+.imp textarea{width:100%;min-height:104px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card-2);color:var(--ink);font-family:var(--mono);font-size:12px;
+  padding:10px 11px;line-height:1.5;resize:vertical}
+.imp textarea:focus{outline:none;border-color:var(--go);box-shadow:0 0 0 3px var(--go-bg)}
+.imp-b{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.prev{margin-top:11px;background:var(--card-2);border-radius:var(--r-sm);padding:11px 12px;
+  font-size:12.5px;line-height:1.5;color:var(--ink-2)}
+.prev b{color:var(--ink)}
+.prev.erro{background:var(--stop-bg);color:var(--stop)}
+
+/* calculadora express dentro do prospect */
+.ex{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:4px 0 12px}
+.ex label{font-size:11px;color:var(--muted);display:block;margin-bottom:4px}
+.ex input,.ex select{width:100%;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card-2);color:var(--ink);padding:9px 10px;font-size:14px;
+  font-family:var(--mono);min-height:42px}
+.ex input:focus,.ex select:focus{outline:none;border-color:var(--go);box-shadow:0 0 0 3px var(--go-bg)}
+.ex-out{grid-column:1/-1;background:var(--go-bg);border-radius:var(--r-sm);padding:12px 13px;
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.ex-out .t{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--go)}
+.ex-out .n{font-family:var(--mono);font-size:24px;font-weight:600;letter-spacing:-.03em;color:var(--go)}
+.ex-out.ruim{background:var(--stop-bg)}
+.ex-out.ruim .t,.ex-out.ruim .n{color:var(--stop)}
+
+@media (min-width:920px){
+  #v-crm{max-width:860px}
+  .crm-nav{max-width:520px}
+  .cap-top input{width:130px}
+  .imp textarea{min-height:130px}
+  .pro:hover{border-color:color-mix(in srgb, var(--go) 30%, var(--line))}
+}
 </style>
 </head>
 <body>
@@ -825,6 +939,9 @@ figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
     <div class="sub" id="bar-sub">flip de console · MS</div>
   </div>
   <div class="spacer"></div>
+  <button class="iconbtn" id="btn-crm" aria-label="CRM — fila e contatos">
+    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  </button>
   <button class="iconbtn" id="btn-theme" aria-label="Alternar tema">
     <svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
   </button>
@@ -894,6 +1011,84 @@ figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.45}
     <div class="kpis" id="k-saude"></div>
     <div class="sec">Por categoria</div>
     <div class="tw"><table id="t-cat"><tbody></tbody></table></div>
+  </section>
+
+
+  <!-- ============ CRM ============ -->
+  <section class="view" id="v-crm" hidden>
+    <button class="voltar" id="crm-voltar" type="button">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg> voltar
+    </button>
+
+    <div class="crm-nav" id="crm-nav">
+      <button type="button" data-cv="fila" aria-pressed="true">Fila<span class="n" id="cn-v">0</span></button>
+      <button type="button" data-cv="comp" aria-pressed="false">Compradores<span class="n" id="cn-c">0</span></button>
+      <button type="button" data-cv="msg" aria-pressed="false">Mensagens</button>
+    </div>
+
+    <!-- ---------- fila de vendedores ---------- -->
+    <div id="cv-fila">
+      <div class="cap">
+        <div class="cap-top">
+          <label for="crm-cap">Capital de trabalho</label>
+          <input id="crm-cap" type="number" inputmode="decimal" step="50" value="1000">
+        </div>
+        <div class="cap-g">
+          <div><span class="v" id="cap-comp">R$ 0</span><span class="k">comprometido</span></div>
+          <div><span class="v" id="cap-livre">R$ 0</span><span class="k">livre</span></div>
+          <div><span class="v g" id="cap-luc">R$ 0</span><span class="k">lucro na fila</span></div>
+        </div>
+      </div>
+
+      <details class="acc" id="imp-acc" style="margin-bottom:14px">
+        <summary><span><span class="n">+</span> &nbsp;Lançar anúncio pelo print</span>
+          <svg class="chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg></summary>
+        <div class="inner">
+      <div class="imp" style="border:0;padding:0;margin:0">
+        <p>Copie o prompt, mande no ChatGPT junto com o print do anúncio, e cole aqui a resposta.</p>
+        <div class="imp-b" style="margin:0 0 10px">
+          <button class="btn btn-s" type="button" id="imp-prompt">Copiar o prompt</button>
+          <button class="btn btn-s" type="button" id="imp-exemplo">Ver exemplo</button>
+        </div>
+        <textarea id="imp-txt" placeholder="Cole aqui a resposta do ChatGPT" spellcheck="false"></textarea>
+        <div id="imp-prev"></div>
+        <div class="imp-b">
+          <button class="btn btn-s" type="button" id="imp-limpar">Limpar</button>
+          <button class="btn btn-p" type="button" id="imp-lancar">Lançar na fila</button>
+        </div>
+      </div>
+        </div>
+      </details>
+
+      <div class="sec">A fila</div>
+      <div id="crm-lista"></div>
+    </div>
+
+    <!-- ---------- compradores ---------- -->
+    <div id="cv-comp" hidden>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 14px">
+        Quem chamou por alguma peça que você tem em estoque. Registrar aqui evita o pior erro
+        da venda: esquecer quem perguntou e vender mais barato pro segundo que apareceu.
+      </p>
+      <button class="btn btn-p" type="button" id="comp-novo" style="width:100%;margin-bottom:14px">
+        Novo interessado
+      </button>
+      <div id="comp-lista"></div>
+    </div>
+
+    <!-- ---------- mensagens ---------- -->
+    <div id="cv-msg" hidden>
+      <p style="font-size:13.5px;color:var(--muted);line-height:1.5;margin:0 0 6px">
+        Toque em copiar e cole no Marketplace. Se você abrir uma pessoa da fila, os campos entre
+        chaves vêm preenchidos com os dados dela.
+      </p>
+      <div class="sec">Comprando</div>
+      <div id="msg-compra"></div>
+      <div class="sec">Vendendo</div>
+      <div id="msg-venda"></div>
+      <div class="sec">O modelo</div>
+      <div id="msg-modelo"></div>
+    </div>
   </section>
 
   <!-- ============ INSÍGNIAS ============ -->
@@ -1679,7 +1874,8 @@ var LARGADA = [
 /* ===================== store ===================== */
 var KEY='meubrick-v1';
 var KEY_ANTIGA='bancada-v2';
-var S = { deals:[], tarefas:{}, regua:{}, giro:{}, tema:null, chartMode:'lucro', insignias:[] };
+var S = { deals:[], tarefas:{}, regua:{}, giro:{}, tema:null, chartMode:'lucro', insignias:[],
+          crm:{v:[],c:[],cap:1000,semeado:0} };
 var db=null, saveT=null;
 
 function load(){
@@ -1692,6 +1888,7 @@ function load(){
     S.tarefas = o.tarefas||{}; S.regua=o.regua||{}; S.giro=o.giro||{};
     S.tema=o.tema||null; S.chartMode=o.chartMode||'lucro';
     S.insignias = Array.isArray(o.insignias)?o.insignias:[];
+    if(o.crm && typeof o.crm==='object') S.crm=o.crm;
   } } }catch(e){}
 }
 function save(){
@@ -2681,9 +2878,12 @@ var VIEWS = {
   negocios:{t:'Negócios', s:'compras, vendas e markup'},
   regua:{t:'Régua', s:'quanto pagar hoje'},
   conquistas:{t:'Insígnias', s:'o que o método premia'},
-  manual:{t:'Manual', s:'método, métricas e foto'}
+  manual:{t:'Manual', s:'método, métricas e foto'},
+  crm:{t:'CRM', s:'fila e contatos'}
 };
+var vAtual='inicio', crmVoltarPara='inicio';
 function go(v){
+  if(v!=='crm') vAtual=v;
   Object.keys(VIEWS).forEach(function(k){ $('v-'+k).hidden = (k!==v); });
   document.querySelectorAll('.tabs button').forEach(function(b){
     b.setAttribute('aria-selected', b.getAttribute('data-v')===v);
@@ -2691,6 +2891,8 @@ function go(v){
   $('bar-title').textContent = VIEWS[v].t;
   $('bar-sub').textContent = VIEWS[v].s;
   $('fab').hidden = (v!=='negocios');
+  $('btn-crm').setAttribute('aria-pressed', v==='crm');
+  if(v==='crm') crmVai('fila');
   window.scrollTo(0,0);
   if(window.tetoFixoOff) window.tetoFixoOff();
   try{ history.replaceState(null,'','#'+v); }catch(e){}
@@ -2728,6 +2930,562 @@ function renderAll(avisar){
 load();
 applyTheme();
 hydrate();
+/* ==================================================================
+   CRM — funil de vendedores e compradores
+   Vive na mesma chave do localStorage que os negócios (meubrick-v1),
+   em S.crm. Fechar um vendedor cria um negócio; fechar um comprador
+   encerra a venda do negócio ligado a ele.
+   ================================================================== */
+
+function cuid(){ return 'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+var FASES_V = [
+  {n:'garimpado',  c:''},
+  {n:'mandei',     c:'w'},
+  {n:'respondeu',  c:'w'},
+  {n:'negociando', c:'w'},
+  {n:'fechei',     c:''},
+  {n:'perdi',      c:'r'}
+];
+var FASES_C = [ {n:'chamou',c:''}, {n:'negociando',c:'w'}, {n:'vendido',c:''}, {n:'sumiu',c:'r'} ];
+
+/* Base de revenda por variação, usada quando o anúncio é lançado pelo print.
+   São os mesmos números da Régua — se mudar lá, mude aqui. */
+var BASE_REV = [
+  ['ps5 slim',3600],['ps5',3400],['ps4 pro',1700],['ps4 slim',1350],['ps4 fat',1150],['ps4',1300],
+  ['ps3 super slim',600],['ps3 slim',550],['ps3 fat',420],['ps3',520],['ps2',480],
+  ['xbox series s',1600],['xbox one',900],
+  ['switch 2',3300],['switch oled',1500],['switch lite',950],['switch',1250],
+  ['joy-con',320],['controle',220],['jogo',120]
+];
+function baseRevenda(item){
+  var t=(item||'').toLowerCase();
+  for(var i=0;i<BASE_REV.length;i++){ if(t.indexOf(BASE_REV[i][0])>=0) return BASE_REV[i][1]; }
+  return 1350;
+}
+/* Mesma conta da Régua: teto = líquido − insumos − (venda × margem). */
+function tetoDe(revenda, insumos, margem, canalK){
+  var c=canal(canalK||'pix');
+  var taxa = revenda>0 ? revenda*c.p + c.f : 0;
+  return Math.max(0, Math.round((revenda - taxa) - (+insumos||0) - revenda*(margem||0.35)));
+}
+
+/* ---------------- carga inicial (os 13 que avaliamos) ---------------- */
+var SEMENTE = [
+ {p:1,  n:'Felipe',        i:'PS4 Slim 1TB',                      cid:'Campo Grande',        km:0,   sem:23, pede:1000, abre:800,  teto:800,  luc:550,
+  nota:'1 controle, sem jogos. Já cortou de R$1.400 sozinho. Vendedor mais cansado da lista e na sua cidade.'},
+ {p:2,  n:'Juliana',       i:'PS4 Slim 1TB + 3 jogos',            cid:'Campo Grande',        km:0,   sem:4,  pede:1100, abre:920,  teto:1068, luc:652,
+  nota:'Cyberpunk, Red Dead 2 e Horizon. Controle com drift declarado por ela — não toque nisso na primeira mensagem, guarde pra contraproposta.'},
+ {p:3,  n:'Vania',         i:'PS4 Slim 1TB completo',             cid:'Sidrolândia',         km:70,  sem:18, pede:1200, abre:1050, teto:1377, luc:865,
+  nota:'2 controles, base, caixa original. God of War Ragnarök, GTA V, MK11, FIFA 25, BF2042. Se travar nos R$1.200, pague — perder R$865 por R$150 é o erro mais caro da lista.'},
+ {p:4,  n:'Carlos',        i:'PS4 Slim + 6 jogos',                cid:'Maracaju',            km:160, sem:3,  pede:1200, abre:970,  teto:1178, luc:717,
+  nota:'RDR2, God of War, Modern Warfare, Days Gone, Horizon e Shadow of the Colossus.'},
+ {p:5,  n:'Sam',           i:'PS4 Slim + 3 controles + GT7',      cid:'Maracaju',            km:160, sem:6,  pede:1050, abre:970,  teto:1057, luc:615,
+  nota:'Envelopado do MW II, dois controles também. Só o GT7 é físico — o resto é digital na conta dele e não transfere. Ele aceita troca por iPhone.'},
+ {p:6,  n:'Vinicius',      i:'PS4 Slim 500GB + 2 jogos',          cid:'Campo Grande',        km:0,   sem:3,  pede:1000, abre:850,  teto:940,  luc:560,
+  nota:'Battlefield 1 e God of War.'},
+ {p:7,  n:'Nélida',        i:'PS4 Fat com leitor quebrado',       cid:'Campo Grande',        km:0,   sem:0,  pede:650,  abre:480,  teto:653,  luc:500,
+  nota:'O leitor KES-490A é peça solta e trocável — o que NÃO se troca é a placa do drive, que é pareada. Confirme qual dos dois antes de ir.'},
+ {p:8,  n:'Andrei Koller', i:'PS4 Slim + 2 controles + 2 jogos',  cid:'Campo Grande',        km:0,   sem:1,  pede:1400, abre:980,  teto:1040, luc:520,
+  nota:'Anúncio novo e caro. Só vale se ele cortar muito.'},
+ {p:9,  n:'Danilo',        i:'PS4 Slim 1TB + 2 ctrl + 5 jogos',   cid:'Aquidauana',          km:130, sem:13, pede:1400, abre:1120, teto:1277, luc:765,
+  nota:'Bom pacote, longe. Só com o de Bonito ou outro da mesma estrada.'},
+ {p:10, n:'Lucas Eduardo', i:'PS4 Slim 1TB + God of War',         cid:'Aquidauana',          km:130, sem:14, pede:1300, abre:820,  teto:970,  luc:575,
+  nota:'Diz "zero". 14 semanas no ar dizendo zero é preço errado, não produto errado.'},
+ {p:11, n:'Bruno',         i:'PS4 Slim 1TB + 2 controles',        cid:'Nova Alvorada do Sul',km:120, sem:2,  pede:1400, abre:1150, teto:1157, luc:578,
+  nota:'Um dos controles é o do Spider-Man. Margem apertada: o teto quase encosta no que ele pede.'},
+ {p:12, n:'Almir',         i:'PS4 Slim 1TB + 3 jogos',            cid:'Bonito',              km:300, sem:1,  pede:1350, abre:980,  teto:1013, luc:540,
+  nota:'MK XL, Nioh e Plants vs Zombies GW2. 300 km: só se fechar junto com o Danilo.'},
+ {p:13, n:'Willian',       i:'PS4 Slim 500GB + 2 controles',      cid:'Campo Grande',        km:0,   sem:0,  pede:950,  abre:0,    teto:933,  luc:0,
+  nota:'FORA por enquanto: anúncio de 4 dias, preço já justo, sem margem de negociação. Guarde e volte em três semanas.'}
+];
+
+/* ---------------- mensagens prontas ---------------- */
+var MSGS_COMPRA = [
+ {t:'Primeiro contato — sua cidade', q:'na fase "garimpado", quando ele está em Campo Grande',
+  x:'Boa tarde, {nome}! Tudo bem? Vi seu anúncio do {item}. Sou bombeiro aqui em Campo Grande e tô querendo dar de presente pro meu sobrinho — o seu tá bem conservado nas fotos. Vou ser direto: consigo {abre} no pix e é o que dá pra mim. Se servir, busco hoje ou amanhã, no horário que for melhor pra você. Tá tudo funcionando certinho?'},
+ {t:'Primeiro contato — outra cidade', q:'quando ele está fora de Campo Grande. O frete é o argumento, não a reclamação',
+  x:'Boa tarde, {nome}! Tudo bem? Vi seu anúncio do {item} e é exatamente o que eu queria dar pro meu sobrinho. Sou bombeiro em Campo Grande, então tenho o custo de ir até {cidade} buscar ou de pagar alguém pra trazer. Por isso consigo {abre} no pix, fechando agora. Se preferir, resolvo já essa semana.'},
+ {t:'Ele respondeu acima do que você abriu', q:'na fase "respondeu". Um motivo só, e o limite declarado',
+  x:'Entendo, {nome}. Consigo esticar até {abre}, mas aí é meu limite mesmo — acima disso não fecha pra mim. Pix na hora e eu resolvo o transporte. Se topar, me diz o horário que eu já me organizo.'},
+ {t:'Usando o defeito que ele declarou', q:'só depois que ele contrapropôs. Nunca na primeira mensagem',
+  x:'{nome}, uma coisa: pelo que você descreveu, isso é peça e bancada — já vi quanto custa. Por isso {abre} é o que fecha pra mim, porque eu assumo o conserto. Se preferir, você resolve antes e a gente conversa no seu preço.'},
+ {t:'Última chamada', q:'quando ele travou e parou de responder. O prazo é seu, não dele',
+  x:'{nome}, sem pressão nenhuma. Minha oferta de {abre} fica de pé até domingo — depois disso eu já vou ter fechado outro. Se mudar de ideia é só chamar.'},
+ {t:'Encerrar sem queimar a ponte', q:'quando ele não desce do preço. Em três semanas o anúncio ainda vai estar lá',
+  x:'Valeu, {nome}! Nesse valor não fecha pra mim, mas obrigado pela atenção. Se daqui a umas semanas ainda estiver parado, me chama que a gente conversa de novo.'},
+ {t:'Combinar o encontro', q:'na fase "negociando", depois que ele aceitou o número',
+  x:'Fechado, {nome}! Posso ir amanhã. Prefere que eu vá aí ou a gente se encontra em algum lugar movimentado? Levo o pix na hora e testo o aparelho rapidinho antes — uns dez minutos, ligar e rodar um jogo. Se der, deixa ele desligado da tomada umas duas horas antes, que eu preciso ver ele ligando frio.'}
+];
+var MSGS_VENDA = [
+ {t:'Resposta ao interessado', q:'primeira resposta de quem chamou no seu anúncio',
+  x:'Boa tarde! Tenho sim, o {item}. Está revisado — eu abri, limpei por dentro e troquei a pasta térmica. Sou bombeiro aqui em Campo Grande. {venda} no pix. Pode testar na minha frente antes de fechar, sem pressa.'},
+ {t:'Garantia', q:'quando ele perguntar. Responder isso antes de ser perguntado fecha venda',
+  x:'Sobre garantia: dou 90 dias, que é o que a lei manda pra produto usado. Se der problema de funcionamento nesse prazo, eu resolvo ou devolvo o dinheiro. Mando por escrito aqui mesmo o que a gente combinou, com a data.'},
+ {t:'Ele sumiu', q:'dois ou três dias depois, uma vez só',
+  x:'{nome}, ainda tem interesse no {item}? Apareceu outra pessoa perguntando, mas você chegou primeiro. Me avisa até amanhã que eu seguro pra você.'},
+ {t:'Recusar troca', q:'sempre que oferecerem celular, moto ou qualquer coisa que não seja dinheiro',
+  x:'Obrigado pela oferta, mas eu só trabalho com pix mesmo — não entendo o suficiente de {item} pra avaliar troca sem correr risco. Se der pra fechar em dinheiro, a gente resolve hoje.'}
+];
+var MSGS_MODELO = [
+ {t:'Diga o número na primeira mensagem', q:'',
+  x:'Perguntar "aceita menos?" devolve a bola pro vendedor e começa a negociação no preço dele. Diga quanto você tem. Um número concreto é o que faz alguém parar e pensar.'},
+ {t:'Um motivo, nunca três', q:'',
+  x:'"É presente pro meu sobrinho" é um motivo. "É presente, e eu moro longe, e tá com defeito, e o mercado tá ruim" é desculpa. Quem dá três razões está pedindo desconto; quem dá uma está dizendo um fato.'},
+ {t:'O prazo é seu, não dele', q:'',
+  x:'"Fica de pé até domingo" funciona. "Me avisa quando puder" morre. Você é quem tem o dinheiro — o relógio é seu.'},
+ {t:'Não critique o produto pra baixar o preço', q:'',
+  x:'Falar mal do aparelho dele ativa a defesa e trava a conversa. O desconto vem do seu limite, não do defeito dele. Guarde o defeito pra quando ele contrapropor.'},
+ {t:'Depois de mandar, silêncio', q:'',
+  x:'Mandou a oferta, para. Mensagem em cima de mensagem entrega ansiedade e ansiedade paga caro. Ele responde ou não responde — nos dois casos você aprende algo.'},
+ {t:'Se ele aceitar, vá', q:'',
+  x:'O maior erro não é pagar R$100 a mais. É ficar pechinchando R$100 num negócio de R$600 de lucro e perder ele pra quem chegou depois com o preço cheio.'},
+ {t:'Ser bombeiro é sua melhor credencial', q:'',
+  x:'Marketplace é cheio de golpe e todo vendedor sabe disso. Dizer que você é bombeiro resolve a desconfiança de quem vai te receber em casa — use uma vez, cedo, e siga em frente. Repetir vira venda de si mesmo.'}
+];
+
+/* ---------------- estado ---------------- */
+function crmInit(){
+  if(!S.crm || typeof S.crm!=='object') S.crm={v:[],c:[],cap:1000,semeado:0};
+  if(!Array.isArray(S.crm.v)) S.crm.v=[];
+  if(!Array.isArray(S.crm.c)) S.crm.c=[];
+  if(typeof S.crm.cap!=='number') S.crm.cap=1000;
+  if(!S.crm.semeado){
+    S.crm.semeado=1;
+    SEMENTE.forEach(function(x){
+      S.crm.v.push({id:cuid(), prio:x.p, nome:x.n, item:x.i, cidade:x.cid, km:x.km,
+        semanas:x.sem, pede:x.pede, abre:x.abre, teto:x.teto, lucro:x.luc,
+        nota:x.nota, fase:0, dealId:'', criado:today()});
+    });
+  }
+}
+
+/* ---------------- render: fila ---------------- */
+function crmCap(){
+  var comp=0, luc=0;
+  S.crm.v.forEach(function(p){ if(p.fase===4){ comp += +p.abre||0; luc += +p.lucro||0; } });
+  var cap=+S.crm.cap||0, livre=cap-comp;
+  $('cap-comp').textContent=money(comp);
+  var L=$('cap-livre'); L.textContent=money(livre);
+  L.className='v '+(livre<0?'r':(livre<400?'w':'g'));
+  $('cap-luc').textContent=money(luc);
+  $('cn-v').textContent = S.crm.v.filter(function(p){ return p.fase<4; }).length;
+  $('cn-c').textContent = S.crm.c.filter(function(c){ return c.fase<2; }).length;
+}
+
+function crmFila(){
+  var host=$('crm-lista');
+  var list=S.crm.v.slice().sort(function(a,b){
+    if((a.fase>=4)!==(b.fase>=4)) return a.fase>=4?1:-1;
+    return (a.prio||99)-(b.prio||99);
+  });
+  if(!list.length){
+    host.innerHTML='<div class="empty"><p>Fila vazia. Use o campo acima pra lançar o primeiro anúncio.</p></div>';
+    crmCap(); return;
+  }
+  host.innerHTML = list.map(function(p){
+    var f=FASES_V[p.fase]||FASES_V[0];
+    var longe = (+p.pede||0) > (+p.teto||0)*1.18;
+    return '<div class="pro '+(p.fase===4?'fechei':(p.fase===5?'perdi':''))+'" data-id="'+p.id+'">'+
+      '<div class="pro-h">'+
+        '<span class="pro-r">'+(p.prio||'—')+'</span>'+
+        '<div style="min-width:0;flex:1">'+
+          '<div class="pro-n">'+esc(p.nome)+'</div>'+
+          '<div class="pro-l">'+esc(p.item)+'<br>'+esc(p.cidade)+
+            (p.km?' · '+p.km+' km':'')+(p.semanas?' · '+p.semanas+(p.semanas===1?' semana':' semanas'):'')+'</div>'+
+        '</div>'+
+        '<button class="pro-x" type="button" data-del="'+p.id+'" aria-label="Excluir '+esc(p.nome)+'">'+
+          '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'+
+      '</div>'+
+      '<div class="pro-nums">'+
+        '<div><span class="v">'+money(p.pede)+'</span><span class="k">ele pede</span></div>'+
+        '<div><span class="v g">'+money(p.abre)+'</span><span class="k">abra em</span></div>'+
+        '<div><span class="v'+(longe?' r':'')+'">'+money(p.teto)+'</span><span class="k">seu teto</span></div>'+
+        (p.lucro?'<div><span class="v g">'+money(p.lucro)+'</span><span class="k">lucro</span></div>':'')+
+      '</div>'+
+      (longe?'<p class="pro-note" style="color:var(--stop)">Pede '+money((+p.pede||0)-(+p.teto||0))+
+        ' acima do teto — distância que negociação não cobre. Guarde e volte em três semanas.</p>':'')+
+      (p.nota?'<p class="pro-note">'+esc(p.nota)+'</p>':'')+
+      '<div class="fun">'+FASES_V.map(function(x,i){
+        return '<button type="button" data-fase="'+i+'" data-p="'+p.id+'"'+
+          (i===p.fase?' class="on '+x.c+'"':'')+'>'+x.n+'</button>';
+      }).join('')+'</div>'+
+    '</div>';
+  }).join('');
+
+  host.querySelectorAll('[data-fase]').forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var p=acharV(b.dataset.p); if(!p) return;
+      var nova=+b.dataset.fase;
+      p.fase=nova; save();
+      if(nova===4) criarNegocioDe(p);
+      crmFila();
+    });
+  });
+  host.querySelectorAll('[data-del]').forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var p=acharV(b.dataset.del); if(!p) return;
+      S.crm.v = S.crm.v.filter(function(x){ return x.id!==p.id; });
+      save(); crmFila(); toast(p.nome+' saiu da fila');
+    });
+  });
+  host.querySelectorAll('.pro').forEach(function(c){
+    c.addEventListener('click', function(){ abrirProspect(c.dataset.id); });
+  });
+  crmCap();
+}
+function acharV(id){ return S.crm.v.filter(function(x){ return x.id===id; })[0]; }
+function acharC(id){ return S.crm.c.filter(function(x){ return x.id===id; })[0]; }
+
+/* Fechar um vendedor vira negócio de verdade na aba Negócios. */
+function criarNegocioDe(p){
+  if(p.dealId && S.deals.some(function(d){ return d.id===p.dealId; })) return;
+  var d={ id:cuid(), item:p.item, cat:'Console', cidade:p.cidade, compraData:today(),
+    compra:+p.abre||0, insumos:0, horas:0, canal:'pix', status:'',
+    vendaData:'', venda:0, obs:'Veio do CRM — '+p.nome };
+  S.deals.push(d); p.dealId=d.id; save();
+  renderAll(false);
+  toast('Negócio criado a partir de '+p.nome);
+}
+
+/* ---------------- detalhe do prospect ---------------- */
+function abrirProspect(id){
+  var p=acharV(id); if(!p) return;
+  var host=$('sheet-host');
+  var rev=+p.revenda|| baseRevenda(p.item);
+  host.innerHTML=
+  '<div class="sheet" id="sheet"><div class="scrim" data-close></div><div class="body">'+
+    '<div class="grab"></div>'+
+    '<h3>'+esc(p.nome)+'</h3>'+
+    '<p class="lead">'+esc(p.item)+' · '+esc(p.cidade)+'</p>'+
+
+    '<div class="sec" style="margin:4px 0 10px">Calculadora express</div>'+
+    '<div class="ex">'+
+      '<div><label for="x-rev">Por quanto você revende</label>'+
+        '<input id="x-rev" type="number" inputmode="decimal" step="50" value="'+rev+'"></div>'+
+      '<div><label for="x-ins">Peças e insumos</label>'+
+        '<input id="x-ins" type="number" inputmode="decimal" step="5" value="'+(+p.insumos||30)+'"></div>'+
+      '<div><label for="x-mar">Margem alvo</label><select id="x-mar">'+
+        [25,30,35,40,50].map(function(m){
+          return '<option value="'+(m/100)+'"'+((+p.margem||0.35)===m/100?' selected':'')+'>'+m+'%</option>';
+        }).join('')+'</select></div>'+
+      '<div><label for="x-ped">Quanto ele pede</label>'+
+        '<input id="x-ped" type="number" inputmode="decimal" step="10" value="'+(+p.pede||0)+'"></div>'+
+      '<div class="ex-out" id="x-out"><span class="t">Pague no máximo</span><span class="n" id="x-teto">R$ 0</span></div>'+
+    '</div>'+
+    '<p style="font-size:12.5px;color:var(--muted);line-height:1.45;margin:0 0 14px" id="x-note"></p>'+
+
+    '<div class="fld"><label for="x-abre">Onde você abre a conversa</label>'+
+      '<input id="x-abre" type="number" inputmode="decimal" step="10" value="'+(+p.abre||0)+'"></div>'+
+    '<div class="fld"><label for="x-nota">Observação</label>'+
+      '<textarea id="x-nota" rows="3" style="width:100%;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card-2);color:var(--ink);padding:10px;font:inherit;font-size:14px">'+esc(p.nota||'')+'</textarea></div>'+
+
+    '<div class="sec" style="margin:14px 0 10px">A mensagem de agora</div>'+
+    '<div id="x-msg"></div>'+
+
+    '<div class="acts" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px">'+
+      '<button class="btn btn-s" data-close>Fechar</button>'+
+      '<button class="btn btn-p" id="x-save">Salvar</button>'+
+    '</div>'+
+  '</div></div>';
+
+  function recalc(){
+    var rv=+$('x-rev').value||0, ins=+$('x-ins').value||0, mar=+$('x-mar').value||0.35, ped=+$('x-ped').value||0;
+    var t=tetoDe(rv, ins, mar, 'pix');
+    $('x-teto').textContent=money(t);
+    var out=$('x-out'), note=$('x-note');
+    out.className='ex-out'+(ped>t*1.18?' ruim':'');
+    if(t<=0) note.textContent='Nesse preço de revenda não sobra nada. Reveja a revenda ou baixe a margem.';
+    else if(ped<=t) note.textContent='Ele já pede abaixo do seu teto. Abra em '+money(Math.round(ped*0.85/10)*10)+' mesmo assim — a sobra é sua.';
+    else if(ped<=t*1.18) note.textContent='Está '+money(ped-t)+' acima. Uma oferta firme resolve.';
+    else note.textContent=money(ped-t)+' acima do teto é distância que negociação não cobre. Guarde o contato e volte em três semanas.';
+    return t;
+  }
+  function msgAgora(){
+    var i = p.fase===0 ? (p.km>0?1:0) : (p.fase===1?4:(p.fase===2?2:(p.fase===3?6:5)));
+    var m=MSGS_COMPRA[i]||MSGS_COMPRA[0];
+    $('x-msg').innerHTML=cartaoMsg(m, p, 0);
+    ligarCopia($('x-msg'));
+  }
+  ['x-rev','x-ins','x-mar','x-ped'].forEach(function(k){
+    $(k).addEventListener('input', recalc); $(k).addEventListener('change', recalc);
+  });
+  recalc(); msgAgora();
+  $('sheet').querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', function(){ host.innerHTML=''; });
+  });
+  $('x-save').addEventListener('click', function(){
+    p.revenda=+$('x-rev').value||0; p.insumos=+$('x-ins').value||0;
+    p.margem=+$('x-mar').value||0.35; p.pede=+$('x-ped').value||0;
+    p.abre=+$('x-abre').value||0; p.nota=$('x-nota').value.trim();
+    p.teto=recalc();
+    save(); host.innerHTML=''; crmFila(); toast('Salvo');
+  });
+}
+
+/* ---------------- mensagens ---------------- */
+function preencher(txt, p){
+  var v={ nome:(p&&p.nome)||'{nome}', item:(p&&p.item)||'{item}',
+    cidade:(p&&p.cidade)||'{cidade}', abre:p&&p.abre?money(p.abre):'{abre}',
+    pede:p&&p.pede?money(p.pede):'{pede}', venda:p&&p.revenda?money(p.revenda):'{venda}' };
+  return txt.replace(/\{(\w+)\}/g, function(m,k){ return v[k]!=null?v[k]:m; });
+}
+function cartaoMsg(m, p, mostrarVars){
+  var txt=preencher(m.x, p);
+  return '<div class="msg">'+
+    '<h4>'+esc(m.t)+'</h4>'+
+    (m.q?'<p class="quando">'+esc(m.q)+'</p>':'')+
+    '<q>'+esc(txt)+'</q>'+
+    '<button class="copiar" type="button" data-copy="'+esc(txt)+'">Copiar</button>'+
+  '</div>';
+}
+function ligarCopia(host){
+  host.querySelectorAll('[data-copy]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var t=b.getAttribute('data-copy');
+      var ok=function(){ b.textContent='Copiado'; b.classList.add('ok');
+        setTimeout(function(){ b.textContent='Copiar'; b.classList.remove('ok'); }, 1600); };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(t).then(ok, function(){ fallbackCopy(t); ok(); });
+      } else { fallbackCopy(t); ok(); }
+    });
+  });
+}
+function fallbackCopy(t){
+  var a=document.createElement('textarea'); a.value=t;
+  a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a);
+  a.select(); try{ document.execCommand('copy'); }catch(e){}
+  document.body.removeChild(a);
+}
+function crmMsgs(){
+  $('msg-compra').innerHTML = MSGS_COMPRA.map(function(m){ return cartaoMsg(m,null,1); }).join('');
+  $('msg-venda').innerHTML  = MSGS_VENDA.map(function(m){ return cartaoMsg(m,null,1); }).join('');
+  $('msg-modelo').innerHTML = MSGS_MODELO.map(function(m){
+    return '<div class="msg"><h4>'+esc(m.t)+'</h4><q>'+esc(m.x)+'</q></div>'; }).join('');
+  ligarCopia($('msg-compra')); ligarCopia($('msg-venda'));
+}
+
+/* ---------------- compradores ---------------- */
+function crmComp(){
+  var host=$('comp-lista');
+  if(!S.crm.c.length){
+    host.innerHTML='<div class="empty"><p>Ninguém registrado ainda. Quando alguém chamar num anúncio seu, lance aqui — inclusive quem não fechou.</p></div>';
+    crmCap(); return;
+  }
+  host.innerHTML=S.crm.c.slice().sort(function(a,b){ return a.fase-b.fase; }).map(function(c){
+    var d=S.deals.filter(function(x){ return x.id===c.dealId; })[0];
+    return '<div class="pro '+(c.fase===2?'fechei':(c.fase===3?'perdi':''))+'" data-cid="'+c.id+'">'+
+      '<div class="pro-h"><div style="min-width:0;flex:1">'+
+        '<div class="pro-n">'+esc(c.nome)+'</div>'+
+        '<div class="pro-l">'+esc(d?d.item:(c.item||'item não ligado'))+
+          (c.cidade?' · '+esc(c.cidade):'')+'</div></div>'+
+        '<button class="pro-x" type="button" data-cdel="'+c.id+'" aria-label="Excluir">'+
+          '<svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>'+
+      '</div>'+
+      (c.oferta?'<div class="pro-nums"><div><span class="v">'+money(c.oferta)+'</span>'+
+        '<span class="k">ofereceu</span></div></div>':'')+
+      (c.nota?'<p class="pro-note">'+esc(c.nota)+'</p>':'')+
+      '<div class="fun">'+FASES_C.map(function(x,i){
+        return '<button type="button" data-cfase="'+i+'" data-c="'+c.id+'"'+
+          (i===c.fase?' class="on '+x.c+'"':'')+'>'+x.n+'</button>'; }).join('')+'</div>'+
+    '</div>';
+  }).join('');
+  host.querySelectorAll('[data-cfase]').forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      var c=acharC(b.dataset.c); if(!c) return;
+      c.fase=+b.dataset.cfase; save();
+      if(c.fase===2) fecharVendaDe(c);
+      crmComp();
+    });
+  });
+  host.querySelectorAll('[data-cdel]').forEach(function(b){
+    b.addEventListener('click', function(ev){
+      ev.stopPropagation();
+      S.crm.c=S.crm.c.filter(function(x){ return x.id!==b.dataset.cdel; });
+      save(); crmComp(); toast('Removido');
+    });
+  });
+  host.querySelectorAll('.pro').forEach(function(el2){
+    el2.addEventListener('click', function(){ formComprador(el2.dataset.cid); });
+  });
+  crmCap();
+}
+function fecharVendaDe(c){
+  var d=S.deals.filter(function(x){ return x.id===c.dealId; })[0];
+  if(!d){ toast('Marque como vendido na aba Negócios'); return; }
+  if(!d.vendaData){ d.vendaData=today(); d.venda=+c.oferta||d.venda||0; save(); renderAll(false);
+    toast('Venda registrada em '+d.item); }
+}
+function formComprador(id){
+  var c = id ? acharC(id) : null;
+  var novo=!c;
+  if(novo) c={id:cuid(), nome:'', cidade:'', dealId:'', item:'', oferta:0, fase:0, nota:'', criado:today()};
+  var host=$('sheet-host');
+  var opts='<option value="">— não ligar a um item —</option>'+S.deals.filter(function(d){
+      return !d.vendaData; }).map(function(d){
+      return '<option value="'+d.id+'"'+(c.dealId===d.id?' selected':'')+'>'+esc(d.item||'sem nome')+'</option>';
+    }).join('');
+  host.innerHTML=
+  '<div class="sheet" id="sheet"><div class="scrim" data-close></div><div class="body">'+
+    '<div class="grab"></div><h3>'+(novo?'Novo interessado':esc(c.nome))+'</h3>'+
+    '<p class="lead">Quem chamou por alguma peça que você tem parada.</p>'+
+    '<div class="fld"><label for="y-nome">Nome</label>'+
+      '<input id="y-nome" type="text" value="'+esc(c.nome)+'" autocomplete="off"></div>'+
+    '<div class="two">'+
+      '<div class="fld"><label for="y-cid">Cidade</label>'+
+        '<input id="y-cid" type="text" value="'+esc(c.cidade)+'" autocomplete="off"></div>'+
+      '<div class="fld"><label for="y-of">Quanto ofereceu</label>'+
+        '<input id="y-of" type="number" inputmode="decimal" step="10" value="'+(+c.oferta||'')+'"></div>'+
+    '</div>'+
+    '<div class="fld"><label for="y-deal">Qual item ele quer</label><select id="y-deal">'+opts+'</select></div>'+
+    '<div class="fld"><label for="y-nota">Observação</label>'+
+      '<textarea id="y-nota" rows="3" style="width:100%;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--card-2);color:var(--ink);padding:10px;font:inherit;font-size:14px">'+esc(c.nota||'')+'</textarea></div>'+
+    '<div class="acts" style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px">'+
+      '<button class="btn btn-s" data-close>Cancelar</button>'+
+      '<button class="btn btn-p" id="y-save">Salvar</button>'+
+    '</div>'+
+  '</div></div>';
+  $('sheet').querySelectorAll('[data-close]').forEach(function(b){
+    b.addEventListener('click', function(){ host.innerHTML=''; });
+  });
+  $('y-save').addEventListener('click', function(){
+    c.nome=$('y-nome').value.trim(); c.cidade=$('y-cid').value.trim();
+    c.oferta=+$('y-of').value||0; c.dealId=$('y-deal').value;
+    c.nota=$('y-nota').value.trim();
+    if(!c.nome){ toast('Falta o nome'); return; }
+    if(novo) S.crm.c.push(c);
+    save(); host.innerHTML=''; crmComp(); toast(novo?'Interessado registrado':'Atualizado');
+  });
+  setTimeout(function(){ if(novo) $('y-nome').focus(); }, 260);
+}
+
+/* ---------------- importar do ChatGPT ---------------- */
+var PROMPT_GPT =
+'Leia o print do anúncio de videogame em anexo e devolva SÓ os campos abaixo, um por linha, '+
+'sem comentário nenhum. Se algum dado não aparecer no print, escreva "?".\n\n'+
+'VENDEDOR: primeiro nome de quem anuncia\n'+
+'ITEM: modelo exato, ex "PS4 Slim 1TB" ou "Nintendo Switch V2"\n'+
+'CIDADE: cidade do anúncio\n'+
+'PEDE: só o número que ele pede, sem R$ nem ponto\n'+
+'SEMANAS: há quantas semanas o anúncio está no ar (se estiver em dias, converta; "?" se não aparecer)\n'+
+'CONTROLES: quantos controles acompanham\n'+
+'JOGOS: quantos jogos FÍSICOS acompanham (não conte jogo digital)\n'+
+'CAIXA: sim ou nao\n'+
+'DEFEITO: o defeito declarado pelo vendedor, ou "nenhum"\n'+
+'OBS: em uma frase, o que mais importa — se já baixou o preço, se é troca, o que chama atenção';
+
+function parseImport(txt){
+  txt=(txt||'').trim();
+  if(!txt) return null;
+  var o={};
+  /* aceita JSON também, caso o ChatGPT resolva devolver assim */
+  if(txt.charAt(0)==='{'){
+    try{ var j=JSON.parse(txt);
+      Object.keys(j).forEach(function(k){ o[k.toUpperCase().trim()]=String(j[k]); });
+    }catch(e){ return {erro:'Isso parece JSON mas veio quebrado. Cole no formato CHAVE: valor.'}; }
+  } else {
+    txt.split(/\r?\n/).forEach(function(l){
+      var m=l.match(/^\s*\**\s*([A-Za-zÇÃÕÁÉÍÓÚÂÊÔ_]+)\s*\**\s*:\s*(.+?)\s*$/);
+      if(m) o[m[1].toUpperCase().replace(/[^A-Z_]/g,'')]=m[2].replace(/^\**|\**$/g,'').trim();
+    });
+  }
+  if(!o.ITEM && !o.VENDEDOR) return {erro:'Não achei os campos. Copie o prompt no botão acima e mande junto com o print.'};
+  var num=function(k){ var v=(o[k]||'').replace(/[^\d]/g,''); return v?parseInt(v,10):0; };
+  var nome=(o.VENDEDOR||'').replace(/^\?$/,'').trim() || 'Sem nome';
+  var item=(o.ITEM||'').replace(/^\?$/,'').trim() || 'Console';
+  var ctrl=num('CONTROLES'), jogos=num('JOGOS');
+  var caixa=/^s/i.test(o.CAIXA||'');
+  var rev = baseRevenda(item) + Math.max(0,ctrl-1)*150 + jogos*70 + (caixa?100:0);
+  var defeito=(o.DEFEITO||'nenhum').trim();
+  var ins = /nenhum|não|nao|^\?$|^-$/i.test(defeito) ? 30 : 90;
+  var teto = tetoDe(rev, ins, 0.35, 'pix');
+  var pede = num('PEDE');
+  var abre = Math.min(teto, Math.round((pede? pede*0.82 : teto)/10)*10);
+  var partes=[];
+  if(ctrl) partes.push(ctrl+(ctrl===1?' controle':' controles'));
+  if(jogos) partes.push(jogos+(jogos===1?' jogo físico':' jogos físicos'));
+  if(caixa) partes.push('caixa original');
+  if(defeito && !/nenhum|^\?$|^-$/i.test(defeito)) partes.push('defeito: '+defeito);
+  if(o.OBS && o.OBS!=='?') partes.push(o.OBS);
+  return { nome:nome, item:item, cidade:(o.CIDADE||'').replace(/^\?$/,'').trim(),
+    semanas:num('SEMANAS'), pede:pede, revenda:rev, insumos:ins, teto:teto, abre:abre,
+    /* lucro no preco de abertura: liquido menos insumos menos o que voce paga */
+    lucro:Math.max(0, Math.round(rev - ins - abre)),
+    nota:partes.join(' · ') };
+}
+function impPreview(){
+  var box=$('imp-prev'), r=parseImport($('imp-txt').value);
+  if(!r){ box.innerHTML=''; return null; }
+  if(r.erro){ box.innerHTML='<div class="prev erro">'+esc(r.erro)+'</div>'; return null; }
+  box.innerHTML='<div class="prev"><b>'+esc(r.nome)+'</b> · '+esc(r.item)+
+    (r.cidade?' · '+esc(r.cidade):'')+'<br>'+
+    'Pede <b>'+money(r.pede)+'</b> · revenda estimada <b>'+money(r.revenda)+'</b> · '+
+    'teto <b>'+money(r.teto)+'</b> · abra em <b>'+money(r.abre)+'</b>'+
+    (r.nota?'<br><span style="color:var(--muted)">'+esc(r.nota)+'</span>':'')+
+    '<br><br><span style="color:var(--muted);font-size:11.5px">A revenda é uma estimativa pela variação. '+
+    'Abra o cartão depois pra ajustar na calculadora express.</span></div>';
+  return r;
+}
+
+/* ---------------- navegação e ligações ---------------- */
+function crmVai(qual){
+  ['fila','comp','msg'].forEach(function(k){ $('cv-'+k).hidden = (k!==qual); });
+  document.querySelectorAll('#crm-nav button').forEach(function(b){
+    b.setAttribute('aria-pressed', b.dataset.cv===qual);
+  });
+  if(qual==='fila') crmFila();
+  else if(qual==='comp') crmComp();
+}
+
+function crmLigar(){
+  crmInit();
+  $('crm-cap').value = S.crm.cap;
+  $('crm-cap').addEventListener('input', function(){
+    S.crm.cap=+this.value||0; save(); crmCap();
+  });
+  document.querySelectorAll('#crm-nav button').forEach(function(b){
+    b.addEventListener('click', function(){ crmVai(b.dataset.cv); });
+  });
+  $('crm-voltar').addEventListener('click', function(){ go(crmVoltarPara||'inicio'); });
+  $('btn-crm').addEventListener('click', function(){ crmVoltarPara=vAtual; go('crm'); });
+  $('comp-novo').addEventListener('click', function(){ formComprador(null); });
+
+  $('imp-txt').addEventListener('input', impPreview);
+  $('imp-prompt').addEventListener('click', function(){
+    var b=this;
+    var ok=function(){ b.textContent='Prompt copiado'; setTimeout(function(){ b.textContent='Copiar o prompt'; },1800); };
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(PROMPT_GPT).then(ok,function(){ fallbackCopy(PROMPT_GPT); ok(); });
+    } else { fallbackCopy(PROMPT_GPT); ok(); }
+  });
+  $('imp-exemplo').addEventListener('click', function(){
+    $('imp-txt').value='VENDEDOR: Marcos\nITEM: PS4 Slim 1TB\nCIDADE: Dourados\nPEDE: 1250\n'+
+      'SEMANAS: 6\nCONTROLES: 2\nJOGOS: 3\nCAIXA: sim\nDEFEITO: nenhum\n'+
+      'OBS: já baixou de 1500, diz que é da segunda dona';
+    impPreview();
+  });
+  $('imp-limpar').addEventListener('click', function(){
+    $('imp-txt').value=''; $('imp-prev').innerHTML='';
+  });
+  $('imp-lancar').addEventListener('click', function(){
+    var r=impPreview();
+    if(!r){ toast('Cole a resposta do ChatGPT primeiro'); return; }
+    var maior=S.crm.v.reduce(function(a,p){ return Math.max(a, +p.prio||0); }, 0);
+    S.crm.v.push({ id:cuid(), prio:maior+1, nome:r.nome, item:r.item, cidade:r.cidade, km:0,
+      semanas:r.semanas, pede:r.pede, abre:r.abre, teto:r.teto, lucro:r.lucro,
+      revenda:r.revenda, insumos:r.insumos, margem:0.35,
+      nota:r.nota, fase:0, dealId:'', criado:today() });
+    save(); $('imp-txt').value=''; $('imp-prev').innerHTML='';
+    crmVai('fila'); toast(r.nome+' entrou na fila');
+  });
+
+  crmMsgs();
+  crmCap();
+}
+
 buildReguaChips();
 renderChecks();
 renderAll();
@@ -2750,6 +3508,7 @@ renderAll();
 document.querySelectorAll('.tabs button').forEach(function(b){
   b.addEventListener('click', function(){ go(b.getAttribute('data-v')); });
 });
+crmLigar();
 var hash=(location.hash||'').replace('#','');
 go(VIEWS[hash]?hash:'inicio');
 

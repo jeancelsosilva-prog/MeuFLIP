@@ -12,6 +12,7 @@ Roda offline, no celular e no PC.
 | **Régua** | Teto de compra com veredito ao vivo: pode comprar, negocie até X, ou vá embora |
 | **Insígnias** | 18 conquistas que premiam giro, margem e honestidade — nunca faturamento |
 | **Manual** | Método, métricas, fotografia, vistoria, primeiros 30 dias, simulador de giro, calendário de sazonalidade e as três curvas ABC |
+| **CRM** | Pelo ícone de contatos no cabeçalho. Fila de vendedores, compradores interessados e mensagens prontas |
 
 **No PC** a navegação vira barra lateral e o conteúdo abre em colunas.
 Atalhos de teclado: `1`–`5` trocam de aba, `N` lança um negócio, `T` abre a régua,
@@ -69,8 +70,8 @@ sem ajuste.
 ## 3. Atualizar depois
 
 Substitua os arquivos no repositório **e suba o número do cache**: no `sw.js`,
-troque `const CACHE = 'meuflip-v12';` para `'meuflip-v13'`, e assim por diante.
-A versão atual é a **v12**.
+troque `const CACHE = 'meuflip-v13';` para `'meuflip-v14'`, e assim por diante.
+A versão atual é a **v13**.
 
 Isso não é opcional. O service worker guarda tudo localmente e serve do cache
 antes de perguntar ao servidor — é o que faz o app abrir offline. Enquanto o nome
@@ -183,3 +184,47 @@ especificidade, então a última do arquivo vence.
 Já teve ali uma grade de duas colunas com faixa de 330px à direita. Não use: a
 grade é implícita, então `grid-row: 2 / -1` volta para a linha 1 e `span 50`
 inventa 49 gaps. Coluna única com larguras limitadas resolve melhor.
+
+## CRM
+
+Abre pelo ícone de contatos no cabeçalho, não pela barra de baixo. Três partes:
+
+**Fila** — os anúncios que você está perseguindo. Cada um tem preço pedido, preço
+de abertura, seu teto e o lucro estimado, mais um funil de seis fases
+(garimpado → mandei → respondeu → negociando → fechei / perdi). Marcar **fechei**
+cria o negócio na aba Negócios automaticamente, já com o que você pagou. A barra
+de capital no topo desconta o que está comprometido nos fechados.
+
+**Compradores** — quem chamou por alguma peça que você tem parada. Ligue o
+interessado a um item do estoque; marcar **vendido** preenche a data e o valor da
+venda naquele negócio.
+
+**Mensagens** — sete modelos para comprar, quatro para vender e sete regras de
+negociação. Os campos entre chaves (`{nome}`, `{item}`, `{abre}`, `{cidade}`,
+`{venda}`) são substituídos automaticamente quando você abre alguém da fila; na
+aba Mensagens eles aparecem crus, para copiar e adaptar.
+
+### Lançar anúncio pelo print
+
+Dentro da Fila, no acordeão "Lançar anúncio pelo print":
+
+1. **Copiar o prompt** põe na área de transferência as instruções para o ChatGPT.
+2. Mande esse prompt junto com o print do anúncio.
+3. Cole a resposta no campo e confira a prévia.
+4. **Lançar na fila.**
+
+O app não confia na conta do ChatGPT: ele só lê os campos e **calcula o teto por
+conta própria**, com a mesma fórmula da Régua
+(`líquido − insumos − venda × margem`). A revenda é estimada pela variação do
+console mais R$150 por controle extra, R$70 por jogo físico e R$100 pela caixa —
+é um chute educado, então abra o cartão e ajuste na calculadora express antes de
+mandar mensagem.
+
+O parser aceita `CHAVE: valor` (uma por linha) e também JSON, e ignora asteriscos
+de markdown. Se faltar campo, ele escreve `?` e o app trata como zero.
+
+### Onde ficam os dados
+
+Tudo em `S.crm` dentro da mesma chave `meubrick-v1`. O backup em JSON do
+cabeçalho leva o CRM junto. A carga inicial dos 13 anúncios roda uma vez só
+(`S.crm.semeado`), então se você excluir um ele não volta.

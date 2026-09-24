@@ -4,7 +4,7 @@
    AO TROCAR QUALQUER ARQUIVO (ícone, HTML, o que for), suba o número da
    constante CACHE abaixo. Sem isso o navegador continua servindo a versão
    antiga para sempre, mesmo com o arquivo novo no servidor. */
-const CACHE = 'meuflip-v12';
+const CACHE = 'meuflip-v13';
 const ASSETS = [
   './',
   './index.html',
